@@ -15,8 +15,10 @@
 
 <script>
 
-window.addEventListener("load", function() {
+window.addEventListener("load", app);
 
+
+function app() {
 	var stageW;
 	var stageH;
 	var ready = false;
@@ -25,7 +27,7 @@ window.addEventListener("load", function() {
 
 	makeCanvas();
 	var stage = new createjs.Stage("myCanvas");
-	stage.enableMouseOver(10);  // leave out if mobile
+	// stage.enableMouseOver(10);  // leave out if mobile
 	createjs.Touch.enable(stage, true);
 	sizeStage();
 
@@ -46,49 +48,137 @@ window.addEventListener("load", function() {
 
 	//add tutorial/help panes to swipe through (intro and in help button/section)
 	generateKey();
-	populateStage();
+	// populateStage();
+
+	//add new game button
+	var newGameC = new createjs.Container();
+	newGameC.cursor = "pointer";
+	stage.addChild(newGameC);
+
+	var newBtn = new createjs.Shape();
+	newGameC.addChild(newBtn)
+
+	var newBtnTxt = new createjs.Text("NEW GAME", stageH*0.04+"px Arial", "white");
+	newGameC.addChild(newBtnTxt);
+	sizeNewBtn();
+
+	//clear and repopulate stage on click
+	newGameC.on("mousedown", function(){
+		// stage.removeAllChildren();
+		// console.log("removed");
+		generateKey();
+		populateStage();
+		stage.update();
+	});
+
+	//TODO generate "answer" row (static until correctly answered)
+
+	// generate 10 "attempt" rows, each row in a container with number on the left-hand side
+	for(var i=0; i<10; i++){
+		createRow(i+1);
+	}
+
+	// run resize rows function
+
+
+
+
+
+	//assign "active" row (activeAttempt)
+	//once row is active, add the peg holes and submit button??? or just add event listeners???
+	//add event listener to each peg hole - when pressed, assign a colour from the arrray; loop through the array
+
+	//add event listener to submit button - compare sequence entered to answer key
+		//if correct - pop up window with "new game" button
+		//if incorrect, replace submit button with feedback pegs (generate array)
+			//add to attempt number
+			//"activate" or add components on new attempt number
+
+
 
 	// end template header
 	//------------------------------------------
-
 
 
 	stage.update();
 	ready = true;
 
 
+
 	// ----------------------------------------------
 	// start template footer
 
-	function populateStage(){
-		// console.log("populating stage...");
-		stage.removeAllChildren();
 
-		//generate "answer" row (static until correctly answered)
+	function createRow(attempt){
 
-		//add "new game" button to the bottom of the sreen
-		newGameBtn();
+		//add container
+		var attemptCont = new createjs.Container();
+		attemptCont.number = attempt;
+		var backing = new createjs.Shape;
+		attemptCont.addChild(backing);
+		// add attempt number
+		var numTxt = new createjs.Text(attempt, stageH*0.04+"px Arial", "black");
+		numTxt.textAlign="center";
+		numTxt.textBaseline = "middle";
+		attemptCont.addChild(numTxt);
+		stage.addChild(attemptCont);
 
-		// generate 10 "attempt" rows, each row in a container with number on the left-hand side
-		for(var i=0; i<10; i++){
-			createRow(i+1);
+
+		//resizing/graphics
+		attemptCont.x = margin;
+		attemptCont.y = stageH - (rowH+margin) - (attempt*rowH + attempt*margin);
+
+		if(attempt%1){
+			backing.graphics.f("#AAA");
+		}else{
+			backing.graphics.f("#EEE");
 		}
-		//assign "active" row (activeAttempt)
-		//once row is active, add the peg holes and submit button??? or just add event listeners???
-		//add event listener to each peg hole - when pressed, assign a colour from the arrray; loop through the array
+		backing.graphics.drawRect(0,0,rowW, rowH);
 
-		//add event listener to submit button - compare sequence entered to answer key
-			//if correct - pop up window with "new game" button
-			//if incorrect, replace submit button with feedback pegs (generate array)
-				//add to attempt number
-				//"activate" or add components on new attempt number
+		numTxt.x = margin;
+		numTxt.y = rowH/2;
+		// numTxt.width = pegW;
 
-		stage.update();
+
+		//add "peg holes" to container
+		var peg;
+		for(var i=0; i<slots; i++){
+			// console.log("new peg");
+			peg = new createjs.Shape();
+			attemptCont.addChild(peg);
+			peg.number = attempt;
+
+			// testing
+			peg.on("click", function(){
+				console.log(peg.number);
+			})
+
+
+			//resize/graphics
+			peg.graphics.c();
+			peg.graphics.f("#999").drawCircle((pegW+margin) + (pegW*i), rowH/2, 15);
+			
+
+
+		}
+	//end of createRow function
+	}
+
+	// button resize function
+	function sizeNewBtn(){
+		newBtn.graphics.c();
+		newBtn.graphics.f("#999").drawRect(stageW*.025,stageH-(rowH+margin),rowW,rowH);
+		var txtW = newBtnTxt.getBounds().width;
+		var txtH = newBtnTxt.getBounds().height;
+		newBtnTxt.x = stageW/2 - txtW/2;
+		newBtnTxt.y = stageH - rowH - txtH/2;
+		// newBtnTxt.textBaseline = "middle";
+		// newBtnTxt.textAlign = "center";
 	}
 
 
+	//randomly generate answer key (4 colours in secquence)
 	function generateKey(){
-		//randomly generate answer key (4 colours in secquence)
 		answerKey = [];
 		var colour;
 		for(var i=0; i<slots; i++){
@@ -98,91 +188,16 @@ window.addEventListener("load", function() {
 		console.log("answer key: "+ answerKey);
 	}
 
-	function createRow(attempt){
-		// console.log(attempt);
-		//add container
-		var attemptCont = new createjs.Container();
-		attemptCont.number = attempt;
-		attemptCont.x = margin;
-		attemptCont.y = stageH - (rowH+margin) - (attempt*rowH + attempt*margin);
-
-		var backing = new createjs.Shape;
-		if(attempt%1){
-			backing.graphics.f("#AAA");
-		}else{
-			backing.graphics.f("#EEE");
-		}
-		backing.graphics.drawRect(0,0,rowW, rowH);
-		attemptCont.addChild(backing);
-
-		// add attempt number
-		var numTxt = new createjs.Text(attempt, stageH*0.04+"px Arial", "black");
-		numTxt.x = margin;
-		numTxt.y = rowH/2;
-		// numTxt.width = pegW;
-		numTxt.textAlign="center";
-		numTxt.textBaseline = "middle";
-		attemptCont.addChild(numTxt);
-
-		//add "peg holes" to container
-		var peg;
-		for(var i=0; i<slots; i++){
-			// console.log("new peg");
-			peg = new createjs.Shape();
-			peg.graphics.c();
-			peg.graphics.f("#999").drawCircle((pegW+margin) + (pegW*i), rowH/2, 15);
-			peg.number = attempt;
-			attemptCont.addChild(peg);
-			// testing
-			peg.on("click", function(){
-				console.log(peg.number);
-			})
-		}
-
-		stage.addChild(attemptCont);
-	}
-
-
-	function newGameBtn(){
-		var newGameC = new createjs.Container();
-		newGameC.cursor = "pointer";
-
-		stage.addChild(newGameC);
-		var newBtn = new createjs.Shape();
-		newBtn.graphics.c();
-		newBtn.graphics.f("#999").drawRect(stageW*.025,stageH-(rowH+margin),rowW,rowH);
-		newGameC.addChild(newBtn)
-
-		var newBtnTxt = new createjs.Text("NEW GAME", stageH*0.04+"px Arial", "white");
-		var txtW = newBtnTxt.getBounds().width;
-		var txtH = newBtnTxt.getBounds().height;
-		newBtnTxt.x = stageW/2 - txtW/2;
-		newBtnTxt.y = stageH - rowH - txtH/2;
-		// newBtnTxt.textBaseline = "middle";
-		// newBtnTxt.textAlign = "center";
-
-		newGameC.addChild(newBtnTxt);
-		//clear and repopulate stage on click
-		newGameC.on("mousedown", function(){
-			stage.removeAllChildren();
-			// console.log("removed");
-			generateKey();
-			populateStage();
-			stage.update();
-		});
-	}
-
-
-
-
 
 
 
 	resize = function() {
 		// here is where we put code to resize
 		populateStage();
+		sizeNewBtn();
 		stage.update();
 	}
+
 
 
 
@@ -226,8 +241,6 @@ window.addEventListener("load", function() {
 		});
 	}
 
-
-
 	function sizeStage() {
 		// earlier than IE9 does not have innerWidth
 		// inner is better on mobile when zoomed so can't always use client
@@ -242,7 +255,9 @@ window.addEventListener("load", function() {
 		console.log(stageW, stageH);
 		if (ready) resize();
 	}
-});
+
+	//end of app function
+}
 
 </script>
 </head>
