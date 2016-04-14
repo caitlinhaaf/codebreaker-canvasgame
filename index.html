@@ -6,7 +6,7 @@
 
 <style>
 	body {margin:0px; padding:0px; background-color:#000; overflow:hidden;}
-	#myCanvas {position:absolute; left:0px; top:0px; background-color:#000;}
+	#myCanvas {position:absolute; left:0px; top:0px; background-color:#FFF;}
 </style>
 
 <script src="libraries/createjs-2015.11.26.min.js"></script>
@@ -23,63 +23,32 @@ window.addEventListener("load", function() {
 	var resize;
 	var orientation;
 
-	var attempt = 1;
-	var slots = 4;
-	var colours = ["red", "blue", "yellow"];
-
 	makeCanvas();
 	var stage = new createjs.Stage("myCanvas");
 	stage.enableMouseOver(10);  // leave out if mobile
 	createjs.Touch.enable(stage, true);
 	sizeStage();
 
+	var activeAttempt = 1;
+	var numAttempts = 10;
+	var slots = 4;
+
+	var rows = numAttempts+2;
+	var rowH = stageH/rows;
+	var rowW = stageW*0.95;
+	var margin = stageH*.025;
+
+	var pegW = rowW/6;
+
+	var colours = ["red", "blue", "yellow"];
+
 	//add tutorial/help panes to swipe through (intro and in help button/section)
-
-	//randomly generate answer key (4 colours in secquence)
-	var answerKey = [];
-	var colour;
-	for(var i=0; i<slots; i++){
-		colour = colours[ Math.floor(Math.random()*colours.length) ];
-		answerKey.push(colour);
-	}
-	console.log("answer key: "+ answerKey);
-
-	// generate 10 "attempt" rows, each row in a container with number on the left-hand side
-
-	//add "new game" button to the bottom of the sreen - repopulates canvas
-
-
-	//assign "active" row
-	//once row is active, add the peg holes and submit button
-	//add event listener to each peg hole - when pressed, assign a colour from the arrray; loop through the array
-
-	//add event listener to submit button - compare sequence entered to answer key
-		//if correct - pop up window with "new game" button
-		//if incorrect, replace submit button with feedback pegs (generate array)
-			//add to attempt number
-			//"activate" or add components on new attempt number
-
-
-
-
+	populateStage();
 
 	// end template header
 	//------------------------------------------
 
 
-
-
-	// var text = new createjs.Text("see source code for question", "30px arial", "white");
-	// stage.addChild(text);
-	// text.x = text.y = 100;
-
-
-
-	resize = function() {
-		// here is where we put code to resize
-
-		stage.update();
-	}
 
 	stage.update();
 	ready = true;
@@ -88,6 +57,107 @@ window.addEventListener("load", function() {
 	// ----------------------------------------------
 	// start template footer
 
+	function populateStage(){
+		console.log("populating stage...");
+		stage.removeAllChildren();
+
+		//create the first row???
+		// createRow();
+
+		//randomly generate answer key (4 colours in secquence)
+		var answerKey = [];
+		var colour;
+		for(var i=0; i<slots; i++){
+			colour = colours[ Math.floor(Math.random()*colours.length) ];
+			answerKey.push(colour);
+		}
+		console.log("answer key: "+ answerKey);
+
+		//generate "answer" row (static until correctly answered)
+
+
+		//add "new game" button to the bottom of the sreen
+		newGameBtn();
+
+		// generate 10 "attempt" rows, each row in a container with number on the left-hand side
+		for(var i=0; i<10; i++){
+			createRow(i+1);
+		}
+
+		//assign "active" row (activeAttempt)
+		//once row is active, add the peg holes and submit button??? or just add event listeners???
+		//add event listener to each peg hole - when pressed, assign a colour from the arrray; loop through the array
+
+		//add event listener to submit button - compare sequence entered to answer key
+			//if correct - pop up window with "new game" button
+			//if incorrect, replace submit button with feedback pegs (generate array)
+				//add to attempt number
+				//"activate" or add components on new attempt number
+
+		stage.update();
+	}
+
+
+	function createRow(attempt){
+		console.log(attempt);
+		//add container
+		var attemptCont = new createjs.Container();
+		attemptCont.number = attempt;
+		attemptCont.x = margin;
+		attemptCont.y = stageH - rowH - (attempt*rowH);
+
+		// add attempt number
+		var numTxt = new createjs.Text(attempt, stageH*0.04+"px Arial", "black");
+		// numTxt.width = pegW;
+		// numTxt.textAlign="center";
+		attemptCont.addChild(numTxt);
+
+		//add "peg holes" to container
+		var peg;
+		for(var i=0; i<slots; i++){
+			// console.log("new peg");
+			peg = new createjs.Shape();
+			peg.graphics.f("#999").drawCircle(pegW + (pegW*i), 10, 10);
+			peg.number = attempt;
+			attemptCont.addChild(peg);
+			// testing
+			peg.on("click", function(){
+				console.log(peg.number);
+			})
+		}
+
+		stage.addChild(attemptCont);
+	}
+
+
+	function newGameBtn(){
+		var newGameC = new createjs.Container();
+		newGameC.cursor = "pointer";
+
+		stage.addChild(newGameC);
+		var newBtn = new createjs.Shape();
+		newBtn.graphics.f("#999").drawRect(stageW*.025,stageH-(rowH+margin),rowW,rowH);
+		newGameC.addChild(newBtn)
+		var newBtnTxt = new createjs.Text("NEW GAME", stageH*0.04+"px Arial", "white");
+		var txtW = newBtnTxt.getBounds().width;
+		newBtnTxt.x = stageW/2 - txtW/2;
+		newBtnTxt.y = stageH - rowH;
+		newGameC.addChild(newBtnTxt);
+		//clear and repopulate stage on click
+		newGameC.on("mousedown", populateStage);
+	}
+
+
+
+
+
+
+
+	resize = function() {
+		// here is where we put code to resize
+		populateStage();
+		stage.update();
+	}
 
 
 
