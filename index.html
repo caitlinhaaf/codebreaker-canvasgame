@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>IC Advanced Basics - LOGIC Question</title>
+
+<style>
+	body {margin:0px; padding:0px; background-color:#000; overflow:hidden;}
+	#myCanvas {position:absolute; left:0px; top:0px; background-color:#000;}
+</style>
+
+<script src="libraries/createjs-2015.11.26.min.js"></script>
+<script src="libraries/haaf.js"></script>
+
+
+<script>
+
+window.addEventListener("load", function() {
+
+	var stageW;
+	var stageH;
+	var ready = false;
+	var resize;
+	var orientation;
+
+	var attempt = 1;
+	var slots = 4;
+	var colours = ["red", "blue", "yellow"];
+
+	makeCanvas();
+	var stage = new createjs.Stage("myCanvas");
+	stage.enableMouseOver(10);  // leave out if mobile
+	createjs.Touch.enable(stage, true);
+	sizeStage();
+
+	//add tutorial/help panes to swipe through (intro and in help button/section)
+
+	//randomly generate answer key (4 colours in secquence)
+	var answerKey = [];
+	var colour;
+	for(var i=0; i<slots; i++){
+		colour = colours[ Math.floor(Math.random()*colours.length) ];
+		answerKey.push(colour);
+	}
+	console.log("answer key: "+ answerKey);
+
+	// generate 10 "attempt" rows, each row in a container with number on the left-hand side
+
+	//add "new game" button to the bottom of the sreen - repopulates canvas
+
+
+	//assign "active" row
+	//once row is active, add the peg holes and submit button
+	//add event listener to each peg hole - when pressed, assign a colour from the arrray; loop through the array
+
+	//add event listener to submit button - compare sequence entered to answer key
+		//if correct - pop up window with "new game" button
+		//if incorrect, replace submit button with feedback pegs (generate array)
+			//add to attempt number
+			//"activate" or add components on new attempt number
+
+
+
+
+
+	// end template header
+	//------------------------------------------
+
+
+
+
+	// var text = new createjs.Text("see source code for question", "30px arial", "white");
+	// stage.addChild(text);
+	// text.x = text.y = 100;
+
+
+
+	resize = function() {
+		// here is where we put code to resize
+
+		stage.update();
+	}
+
+	stage.update();
+	ready = true;
+
+
+	// ----------------------------------------------
+	// start template footer
+
+
+
+
+	function makeCanvas() {
+		// make a canvas tag and apply attributes for id, width and height
+		var canvas = document.createElement("canvas");
+		canvas.setAttribute("id", "myCanvas");
+
+		// get maximum size for canvas
+		// note: iOS6 does not work from loading icon unless keep canvas within device size
+		// thank you apple for this and many other days of hell
+		largest = Math.max(window.innerWidth, screen.width, window.innerHeight, screen.height);
+		if (!/ip(hone|od|ad)/i.test(navigator.userAgent)) largest *= 3; // handle up to three monitors
+		canvas.setAttribute("width", largest);
+		canvas.setAttribute("height", largest);
+
+		// add our canvas tag
+		document.body.appendChild(canvas);
+
+		// stop the canvas from moving when certain keys are pressed (pgdwn, pgup, arrows, home, end)
+		// and stop scrollwheel from moving page
+		var a = function(e) {
+			if (!e) e = event;
+			if (e.keyCode && (e.keyCode >= 32 && e.keyCode <= 40)) e.preventDefault();
+		}
+		var b = function(e) {
+			if (!e) e = event;
+			e.preventDefault();
+		}
+		var c = b;
+		window.addEventListener("keydown", a);
+		window.addEventListener("mousewheel", b);
+		window.addEventListener("DOMMouseScroll", c);
+		window.addEventListener('resize', function() {
+			sizeStage();
+			if (/android|nexus/i.test(navigator.userAgent)) {
+				setTimeout(function() {
+					sizeStage();
+				}, 500); // to catch delayed screen sizes
+			}
+		});
+	}
+
+
+
+	function sizeStage() {
+		// earlier than IE9 does not have innerWidth
+		// inner is better on mobile when zoomed so can't always use client
+		// ternary operator
+		stageW = isNaN(window.innerWidth) ? window.clientWidth : window.innerWidth;
+		stageH = isNaN(window.innerHeight) ? window.clientHeight : window.innerHeight;
+
+		// if wider than high then we have horizontal (or landscape)
+		orientation = (stageW>stageH) ? "horizontal" : "vertical";
+
+		if (stage) stage.setBounds(0,0,stageW,stageH);
+		if (ready) resize();
+	}
+});
+
+</script>
+</head>
+<body>
+
+</body>
+</html>
