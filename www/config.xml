@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.sheridan.imm.collective"
-        version   = "1.0.0">
+        version   = "0.0.0">
 
     <name>Mobile Basic</name>
 
@@ -12,8 +12,8 @@
        Blue circle yay
     </description>
 
-    <author href="http//danzen.com" email="door@danzen.com">
-        Dan Zen
+    <author href="caitinhaaf.com" email="me@caitlinhaaf.com">
+        Caitlin Haaf
     </author>
 
     <!--
