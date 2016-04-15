@@ -48,7 +48,6 @@ function app() {
 
 	//add tutorial/help panes to swipe through (intro and in help button/section)
 	generateKey();
-	// populateStage();
 
 	//add new game button
 	var newGameC = new createjs.Container();
@@ -67,7 +66,6 @@ function app() {
 		// stage.removeAllChildren();
 		// console.log("removed");
 		generateKey();
-		populateStage();
 		stage.update();
 	});
 
@@ -79,8 +77,6 @@ function app() {
 	}
 
 	// run resize rows function
-
-
 
 
 
@@ -157,24 +153,29 @@ function app() {
 			//resize/graphics
 			peg.graphics.c();
 			peg.graphics.f("#999").drawCircle((pegW+margin) + (pegW*i), rowH/2, 15);
-			
+
 
 
 		}
 	//end of createRow function
 	}
 
+
+
 	// button resize function
 	function sizeNewBtn(){
+		var btnH = stageH*0.06;
+		var btnW = stageW*0.95;
+
 		newBtn.graphics.c();
-		newBtn.graphics.f("#999").drawRect(stageW*.025,stageH-(rowH+margin),rowW,rowH);
+		newBtn.graphics.f("#999").drawRect(stageW*.025,stageH-(btnH+margin),btnW,btnH);
+		//resize text
 		var txtW = newBtnTxt.getBounds().width;
 		var txtH = newBtnTxt.getBounds().height;
 		newBtnTxt.x = stageW/2 - txtW/2;
-		newBtnTxt.y = stageH - rowH - txtH/2;
-		// newBtnTxt.textBaseline = "middle";
-		// newBtnTxt.textAlign = "center";
+		newBtnTxt.y = stageH - btnH - txtH/2;
 	}
+
 
 
 	//randomly generate answer key (4 colours in secquence)
@@ -193,7 +194,6 @@ function app() {
 
 	resize = function() {
 		// here is where we put code to resize
-		populateStage();
 		sizeNewBtn();
 		stage.update();
 	}
@@ -241,6 +241,7 @@ function app() {
 		});
 	}
 
+
 	function sizeStage() {
 		// earlier than IE9 does not have innerWidth
 		// inner is better on mobile when zoomed so can't always use client
@@ -255,6 +256,7 @@ function app() {
 		console.log(stageW, stageH);
 		if (ready) resize();
 	}
+
 
 	//end of app function
 }
