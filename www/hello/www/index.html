@@ -101,7 +101,6 @@ function app() {
 	ready = true;
 
 
-
 	// ----------------------------------------------
 
 
@@ -110,7 +109,7 @@ function app() {
 		var attemptCont = new createjs.Container();
 		attemptCont.number = attempt;
 
-		var backing = new createjs.Shape;
+		var backing = new createjs.Shape();
 		// attemptCont.backing = backing;
 		attemptCont.addChild(backing);
 
@@ -130,11 +129,27 @@ function app() {
 			attemptCont.addChild(peg);
 			peg.number = attempt;
 
+			peg.colour = 0;
+
 			// testing
 			peg.on("click", function(){
-				console.log(peg.number);
+				//add colored marble graphic
+
+				if(peg.colour < 2){
+					peg.colour += 1;
+				}else{
+					peg.colour = 0;
+				}
+
+				console.log(peg.number, peg.colour);
 			})
 		}
+
+		//add row submit button
+		var submit = new createjs.Shape();
+		submit.on("click", check);
+		attemptCont.addChild(submit);
+
 	//end of createRow function
 	}
 
@@ -172,10 +187,18 @@ function app() {
 			for(var j=2; j<6; j++){
 				var peg = row.getChildAt(j);
 				peg.graphics.c();
-				peg.graphics.f("#999").drawCircle(pegW*(j-1), rowH/2, rowH*.4);
+				peg.graphics.f("#999").drawCircle(pegW*(j-1), rowH/2, rowH*.4)
+				// peg.graphics.beginRadialGradientFill(["#FFF","#000"], [0, 1], pegW*(j-1), rowH/2, 0, 80, 80, 50)
+				.drawCircle(pegW*(j-1), rowH/2, rowH*.4);
 				// console.log("peg!");
 			}
-	}
+
+		// style/size row submit button
+		var submit = row.getChildAt(6);
+		submit.graphics.c();
+		submit.graphics.f("#999").drawRect(pegW*6, 0, pegW, pegW);
+
+		}
 }
 
 	// button resize function
@@ -190,6 +213,11 @@ function app() {
 		var txtH = newBtnTxt.getBounds().height;
 		newBtnTxt.x = stageW/2 - txtW/2;
 		newBtnTxt.y = stageH - btnH - txtH/2;
+	}
+
+	//
+	function check(){
+		console.log("checking...");
 	}
 
 	// ANSWER KEY FUNCTION
@@ -261,7 +289,7 @@ function app() {
 		orientation = (stageW>stageH) ? "horizontal" : "vertical";
 
 		if (stage) stage.setBounds(0,0,stageW,stageH);
-		console.log(stageW, stageH);
+		// console.log(stageW, stageH);
 		if (ready) resize();
 	}
 
