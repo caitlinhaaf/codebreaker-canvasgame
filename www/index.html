@@ -77,7 +77,10 @@
 		//clear and repopulate stage on click
 		newGameC.on("mousedown", function(){
 			// stage.removeAllChildren();
-			// console.log("removed");
+
+			//remove all rows from attemptCont
+			//regenerate rows
+			//reset active attempt number to 1
 			generateKey();
 			stage.update();
 		});
@@ -149,20 +152,23 @@
 
 			// event listener - changing peg colour property
 			pegCont.on("mousedown", function(e){
-
-				//set new colour value
-				//add colored marble graphic
-				if(peg.colour < 2){
-					peg.colour += 1;
-				}else{
-					peg.colour = 0;
+				var peg = e.target;
+				if(peg.number == activeAttempt){
+					//set new colour value
+					//add colored marble graphic
+					if(peg.colourNum < 2){
+						peg.colourNum += 1;
+					}else{
+						peg.colourNum = 0;
+					}
+					peg.colour = colours[peg.colourNum];
+					console.log(peg.number, peg.colourNum, peg.colour);
 				}
-				console.log(peg.number, peg.colour);
 			});
-
 
 			//add row submit button
 			var submit = new createjs.Shape();
+			submit.number = attempt;
 			submit.on("click", check);
 			attemptCont.addChild(submit);
 
@@ -207,7 +213,6 @@
 					var peg = pegCont.getChildAt(j);
 					peg.graphics.c();
 					peg.graphics.f("#999").drawCircle(pegW*(j-1), rowH/2, rowH*.4)
-					// peg.graphics.beginRadialGradientFill(["#FFF","#000"], [0, 1], pegW*(j-1), rowH/2, 0, 80, 80, 50)
 					.drawCircle(pegW*(j-1), rowH/2, rowH*.4);
 					// console.log("peg!");
 				}
@@ -218,6 +223,7 @@
 			submit.graphics.f("black").drawRect(pegW*5, rowH*.1, rowH*.8, rowH*.8);
 
 			}
+	//end of size rows function
 	}
 
 		// button resize function
@@ -234,10 +240,33 @@
 			newBtnTxt.y = stageH - btnH - txtH/2;
 		}
 
-		//
-		function check(){
+		//WIN/LOSE LOGIC AND CHECKS
+		//---------------------------------
+		function check(e){
 			console.log("checking...");
+			//grab the associated attempt container
+			//grab the peg container inside
+			//loop through the pegs inside and add the colour name property to the array
+			//compare submit array to answer key array
+			if (e.target.number == activeAttempt){
+				var submit = [];
+
+				activeAttempt ++;
+				console.log(activeAttempt);
+				console.log(answerKey);
+			}
 		}
+
+
+		function win(){
+			console.log("you win!");
+		}
+
+		function lose(){
+			console.log("you lose");
+		}
+
+
 
 		// ANSWER KEY FUNCTION
 		//---------------------------------
@@ -252,7 +281,9 @@
 			console.log("answer key: "+ answerKey);
 		}
 
+
 		//MAKE CANVAS FUNCTION
+		//---------------------------------
 		function makeCanvas() {
 			// make a canvas tag and apply attributes for id, width and height
 			var canvas = document.createElement("canvas");
@@ -293,7 +324,7 @@
 			});
 		}
 
-		//SIZING/RESIZING FUNCTIONS
+		//SIZING/RESIZING STAGE FUNCTIONS
 		//---------------------------------
 		function sizeStage() {
 			// earlier than IE9 does not have innerWidth
@@ -303,7 +334,6 @@
 
 			// re-establish size variables
 
-
 			// if wider than high then we have horizontal (or landscape)
 			orientation = (stageW>stageH) ? "horizontal" : "vertical";
 
@@ -311,7 +341,6 @@
 			// console.log(stageW, stageH);
 			if (ready) resize();
 		}
-
 
 		resize = function() {
 			// here is where we put code to resize
