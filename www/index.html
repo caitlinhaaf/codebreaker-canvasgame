@@ -22,7 +22,22 @@
 	window.addEventListener("load", app);
 
 	function app() {
-		// loadImages();
+		//LOAD IMAGES
+		//------------------------
+		var btn1 = new Image();
+    btn1.src = "assets/greenmarble.svg";
+		var gBtn = new createjs.Bitmap(btn1);
+
+		var btn2 = new Image();
+    btn2.src = "assets/bluemarble.svg";
+		var bBtn = new createjs.Bitmap(btn2);
+
+		var btn3 = new Image();
+    btn3.src = "assets/yellowmarble.svg";
+		var yBtn = new createjs.Bitmap(btn3);
+
+		//GLOBAL VARIABLES
+		//------------------------
 		var stageW;
 		var stageH;
 		var ready = false;
@@ -47,9 +62,9 @@
 		var margin = stageH*.025;
 		var pegW = stageW/6;
 
-		var colours = ["red", "blue", "yellow"];
+		var colours = ["green", "blue", "yellow"];
 		//add array of marble images
-		var marbles = []
+		var marbles = [gBtn, bBtn, yBtn];
 		var answerKey = [];
 
 		//add tutorial/help panes to swipe through (intro and in help button/section)
@@ -153,8 +168,6 @@
 
 		//end of createRow function
 		}
-
-
 
 		//FUNCTIONS TO RESIZE COMPONENTS
 		//---------------------------------
