@@ -57,7 +57,7 @@
 		var numRows = numAttempts+2;
 
 		//variables affected by resizing
-		var rowH = stageH*0.06;
+		var rowH = stageH*0.1;
 		var rowW = stageW*0.95;
 		var margin = stageH*.025;
 		var pegW = stageW/6;
@@ -69,6 +69,7 @@
 		var answerKey = [];
 
 		//add tutorial/help panes to swipe through (intro and in help button/section)
+
 
 		generateKey();
 
@@ -167,7 +168,7 @@
 		//---------------------------------
 
 		function sizeRows(){
-			var rowH = stageH*0.07;
+			var rowH = stageH*0.08;
 			// var rowW = stageW*0.95;
 			var marginW = stageW*.025;
 			var marginH = stageH*.01;
@@ -177,7 +178,7 @@
 			for(var i=0; i<numAttempts; i++){
 				var row = rows.getChildAt(i);
 				row.x = 0;
-				row.y = stageH - (rowH+marginH) - (row.number*rowH + row.number*marginH);
+				row.y = stageH - (rowH+marginH*3) - (row.number*rowH);
 				// generate/resize background rectangle
 				var backing = row.getChildAt(0);
 				backing.graphics.c();
