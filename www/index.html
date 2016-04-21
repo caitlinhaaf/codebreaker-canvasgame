@@ -1,33 +1,28 @@
 <!doctype html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>IC Advanced Basics - LOGIC Question</title>
+	<meta charset="utf-8">
+	<title>IC Advanced Basics - LOGIC Question</title>
 
-<!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+	<!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 
-<style>
-	body {margin:0px; padding:0px; background-color:#000; overflow:hidden;}
-	#myCanvas {position:absolute; left:0px; top:0px; background-color:#FFF;}
-</style>
+	<style>
+		body {margin:0px; padding:0px; background-color:#000; overflow:hidden;}
+		#myCanvas {position:absolute; left:0px; top:0px; background-color:#FFF;}
+	</style>
 
-<script src="libraries/createjs-2015.11.26.min.js"></script>
-<script src="libraries/haaf.js"></script>
-
-
-
-</script>
+	<script src="libraries/createjs-2015.11.26.min.js"></script>
+	<script src="libraries/haaf.js"></script>
+	</script>
 </head>
 <body>
-
-
-
 	<script>
 
 	window.addEventListener("load", app);
 
 	function app() {
+		// loadImages();
 		var stageW;
 		var stageH;
 		var ready = false;
@@ -58,7 +53,6 @@
 		var answerKey = [];
 
 		//add tutorial/help panes to swipe through (intro and in help button/section)
-
 
 		generateKey();
 
@@ -97,26 +91,12 @@
 		}
 		sizeRows();
 
-		//assign "active" row (activeAttempt)
-		//once row is active, add the peg holes and submit button??? or just add event listeners???
-		//add event listener to each peg hole - when pressed, assign a colour from the arrray; loop through the array
-
-		//add event listener to submit button - compare sequence entered to answer key
-			//if correct - pop up window with "new game" button
-			//if incorrect, replace submit button with feedback pegs (generate array)
-				//add to attempt number
-				//"activate" or add components on new attempt number
-
-
 		//------------------------------------------
-
 
 		stage.update();
 		ready = true;
 
-
 		// ----------------------------------------------
-
 
 		function createRow(attempt){
 			//add container
@@ -148,7 +128,6 @@
 				peg.colourNum = 0;
 				peg.colour;
 			}
-
 
 			// event listener - changing peg colour property
 			pegCont.on("mousedown", function(e){
@@ -221,7 +200,6 @@
 			var submit = row.getChildAt(3);
 			submit.graphics.c();
 			submit.graphics.f("black").drawRect(pegW*5, rowH*.1, rowH*.8, rowH*.8);
-
 			}
 	//end of size rows function
 	}
@@ -243,30 +221,56 @@
 		//WIN/LOSE LOGIC AND CHECKS
 		//---------------------------------
 		function check(e){
-			console.log("checking...");
-			//grab the associated attempt container
-			//grab the peg container inside
-			//loop through the pegs inside and add the colour name property to the array
-			//compare submit array to answer key array
+			// console.log("checking...");
 			if (e.target.number == activeAttempt){
 				var submit = [];
 
-				activeAttempt ++;
-				console.log(activeAttempt);
-				console.log(answerKey);
+				//grab the associated attempt container...
+				//grab the peg container inside...
+				//loop through the pegs inside and add the colour name property to the array...
+				var row = rows.getChildAt(activeAttempt-1);
+				var pegs = row.getChildAt(2);
+				// console.log(row);
+				for(var i=0; i<slots; i++){
+					var peg = pegs.getChildAt(i);
+					submit.push(peg.colour);
+				}
+				console.log(submit);
+				//compare submit array to answer key array...
+
+				if(submit.toString() == answerKey.toString()){
+					win();
+				}else if(activeAttempt==10){
+					lose();
+				}else{
+
+					//if the peg is in the right place and the right color ++rightPeg
+					//if the peg is the right color, but not the right peg, ++halfRightPeg
+
+					var rightPeg = 0;
+					var halfRightPeg = 0;
+
+					//remove submit button from row
+					//replace with rightPeg and halfRightPeg numbers
+
+					activeAttempt ++;
+					console.log(activeAttempt);
+					console.log(answerKey);
+				}
 			}
 		}
 
-
 		function win(){
+			//dislay win message in window
+			//add new game btn
 			console.log("you win!");
 		}
 
 		function lose(){
+			//dislay win message in window
+			//add new game btn
 			console.log("you lose");
 		}
-
-
 
 		// ANSWER KEY FUNCTION
 		//---------------------------------
@@ -280,7 +284,6 @@
 			}
 			console.log("answer key: "+ answerKey);
 		}
-
 
 		//MAKE CANVAS FUNCTION
 		//---------------------------------
@@ -296,10 +299,8 @@
 			if (!/ip(hone|od|ad)/i.test(navigator.userAgent)) largest *= 3; // handle up to three monitors
 			canvas.setAttribute("width", largest);
 			canvas.setAttribute("height", largest);
-
 			// add our canvas tag
 			document.body.appendChild(canvas);
-
 			// stop the canvas from moving when certain keys are pressed (pgdwn, pgup, arrows, home, end)
 			// and stop scrollwheel from moving page
 			var a = function(e) {
@@ -331,8 +332,6 @@
 			// inner is better on mobile when zoomed so can't always use client
 			stageW = isNaN(window.innerWidth) ? window.clientWidth : window.innerWidth;
 			stageH = isNaN(window.innerHeight) ? window.clientHeight : window.innerHeight;
-
-			// re-establish size variables
 
 			// if wider than high then we have horizontal (or landscape)
 			orientation = (stageW>stageH) ? "horizontal" : "vertical";
