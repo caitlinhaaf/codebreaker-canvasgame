@@ -168,7 +168,7 @@
 
 		function sizeRows(){
 			var rowH = stageH*0.07;
-			var rowW = stageW*0.95;
+			// var rowW = stageW*0.95;
 			var marginW = stageW*.025;
 			var marginH = stageH*.01;
 			var pegW = stageW/6;
@@ -176,8 +176,8 @@
 			//loop through rows...
 			for(var i=0; i<numAttempts; i++){
 				var row = rows.getChildAt(i);
-				row.x = marginW;
-				row.y = stageH - margin - (rowH+marginH) - (row.number*rowH + row.number*marginH);
+				row.x = 0;
+				row.y = stageH - (rowH+marginH) - (row.number*rowH + row.number*marginH);
 				// generate/resize background rectangle
 				var backing = row.getChildAt(0);
 				backing.graphics.c();
@@ -186,14 +186,14 @@
 				}else{
 					backing.graphics.f("#EEE");
 				}
-				backing.graphics.drawRect(0,0,rowW, rowH);
+				backing.graphics.drawRect(0,0,stageW, rowH);
 				// resize row text
 				var numTxt = row.getChildAt(1);
-				numTxt.x = marginW*2;
+				numTxt.x = marginW*3;
 				numTxt.y = rowH/2;
 
 				var pegCont = row.getChildAt(2);
-				pegCont.x = margin + pegW*2;
+				pegCont.x = margin*2 + pegW*2;
 				//loop through/resize row pegs
 				for(var j=0; j<slots; j++){
 					var peg = pegCont.getChildAt(j);
@@ -232,14 +232,13 @@
 			if (row.submit){
 				console.log("sizing number...");
 				var rightTxt = row.getChildAt(4);
-				// rightPegTxt = row.rightPegs;
-				rightTxt.x = stageW- (pegW-margin);
+				rightTxt.x = stageW - (pegW-margin*2);
 				rightTxt.y = rowH/2;
 				// row.addChild(rightTxt);
 			}else{
 				var submit = row.getChildAt(3);
 				submit.graphics.c();
-				submit.graphics.f("black").drawRect(pegW*5, rowH*.1, rowH*.8, rowH*.8);
+				submit.graphics.f("black").drawRect(pegW*5+margin, rowH*.1, rowH*.8, rowH*.8);
 			}
 			//end of row loop
 			}
@@ -299,7 +298,7 @@
 					var rightTxt = new createjs.Text(rightPegs, stageH*0.04+"px Arial", "green");
 					rightTxt.textAlign="center";
 					rightTxt.textBaseline = "middle";
-					rightTxt.x = stageW- (pegW-margin);
+					rightTxt.x = stageW - (pegW-margin*2);
 					rightTxt.y = rowH/2;
 					row.addChild(rightTxt);
 
