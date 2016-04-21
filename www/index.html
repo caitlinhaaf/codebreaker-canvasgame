@@ -80,7 +80,7 @@
 		var newBtn = new createjs.Shape();
 		newGameC.addChild(newBtn)
 
-		var newBtnTxt = new createjs.Text("NEW GAME", stageH*0.03+"px Arial", "white");
+		var newBtnTxt = new createjs.Text("NEW GAME", "bold "+stageH*0.03+"px Arial", "white");
 		newGameC.addChild(newBtnTxt);
 		sizeNewBtn();
 
@@ -248,15 +248,15 @@
 		// button resize function
 		function sizeNewBtn(){
 			//redefine sizing variables
-			var btnH = stageH*0.06;
-			var btnW = stageW*0.4;
+			var btnH = stageH*0.065;
+			var btnW = stageW*0.95;
 
 			newBtn.graphics.c();
-			newBtn.graphics.f("#999").drawRect(stageW*.3,stageH-(btnH+margin),btnW,btnH);
+			newBtn.graphics.f("#999").drawRect(margin,stageH-(btnH+margin),btnW,btnH);
 			var txtW = newBtnTxt.getBounds().width;
 			var txtH = newBtnTxt.getBounds().height;
 			newBtnTxt.x = stageW/2 - txtW/2;
-			newBtnTxt.y = stageH - btnH - txtH/2;
+			newBtnTxt.y = stageH - btnH - txtH/2 + 3;
 		}
 
 		//WIN/LOSE LOGIC AND CHECKS
