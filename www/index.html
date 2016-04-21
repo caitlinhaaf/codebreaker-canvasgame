@@ -207,7 +207,6 @@
 					}
 
 				}
-
 				// event listener - changing peg colour property
 				pegCont.on("mousedown", function(e){
 					var peg = e.target;
@@ -238,7 +237,7 @@
 			}else{
 				var submit = row.getChildAt(3);
 				submit.graphics.c();
-				submit.graphics.f("black").drawRect(stageW-rowH*1.5, 0, rowH*1.5, rowH);
+				submit.graphics.f("black").drawRect(stageW-rowH*1.2, 0, rowH*1.2, rowH);
 			}
 			//end of row loop
 			}
@@ -295,7 +294,7 @@
 					//remove submit button from row
 					btn.graphics.c();
 					//replace with rightPeg and halfRightPeg numbers
-					var rightTxt = new createjs.Text(rightPegs, stageH*0.04+"px Source Sans Pro", "green");
+					var rightTxt = new createjs.Text(rightPegs, stageH*0.04+"px Arial", "green");
 					rightTxt.textAlign="center";
 					rightTxt.textBaseline = "middle";
 					rightTxt.x = stageW - (pegW-margin*2);
