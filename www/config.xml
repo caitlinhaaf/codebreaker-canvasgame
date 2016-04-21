@@ -16,6 +16,7 @@
     <preference name="stay-in-webview"            value="false" />          <!-- ios: external links should open in the default browser, 'true' would use the webview the app lives in -->
     <preference name="detect-data-types"          value="true" />           <!-- ios: controls whether data types (such as phone no. and dates) are automatically turned into links by the system -->
 
+    <icon src="icon.png" width="57" height="57" />
 
     <plugin name="cordova-plugin-whitelist" spec="1" />
     <access origin="*" />
