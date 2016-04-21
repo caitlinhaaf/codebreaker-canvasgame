@@ -248,15 +248,15 @@
 		// button resize function
 		function sizeNewBtn(){
 			//redefine sizing variables
-			var btnH = stageH*0.065;
-			var btnW = stageW*0.95;
+			var btnH = stageH*0.08;
+			// var btnW = stageW;
 
 			newBtn.graphics.c();
-			newBtn.graphics.f("#999").drawRect(margin,stageH-(btnH+margin),btnW,btnH);
+			newBtn.graphics.f("#999").drawRect(0,stageH-(btnH),stageW,btnH);
 			var txtW = newBtnTxt.getBounds().width;
 			var txtH = newBtnTxt.getBounds().height;
 			newBtnTxt.x = stageW/2 - txtW/2;
-			newBtnTxt.y = stageH - btnH - txtH/2 + 3;
+			newBtnTxt.y = stageH - btnH + 15;
 		}
 
 		//WIN/LOSE LOGIC AND CHECKS
