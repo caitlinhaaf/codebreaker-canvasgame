@@ -141,37 +141,15 @@
 				peg = new createjs.Shape();
 				pegCont.addChild(peg);
 				peg.number = attempt;
-				peg.colourNum = 0;
+				peg.colourNum;
 				peg.colour;
 				peg.position = i;
 			}
-
-			// event listener - changing peg colour property
-			pegCont.on("mousedown", function(e){
-				var peg = e.target;
-				if(peg.number == activeAttempt){
-					//set new colour value
-					//add colored marble graphic
-					if(peg.colourNum < 2){
-						peg.colourNum += 1;
-					}else{
-						peg.colourNum = 0;
-					}
-					peg.colour = colours[peg.colourNum];
-					console.log(peg.number, peg.colourNum, peg.colour);
-
-					peg.graphics.c();
-					peg.graphics.f(colourCodes[peg.colourNum]).drawCircle(pegW*(peg.position-1), rowH*0.55, rowH*.5);
-					stage.update();
-				}
-			});
-
 			//add row submit button
 			var submit = new createjs.Shape();
 			submit.number = attempt;
 			submit.on("click", check);
 			attemptCont.addChild(submit);
-
 		//end of createRow function
 		}
 
@@ -189,7 +167,7 @@
 			for(var i=0; i<numAttempts; i++){
 				var row = rows.getChildAt(i);
 				row.x = marginW;
-				row.y = stageH - (rowH+marginH) - (row.number*rowH + row.number*marginH);
+				row.y = stageH - margin - (rowH+marginH) - (row.number*rowH + row.number*marginH);
 				// generate/resize background rectangle
 				var backing = row.getChildAt(0);
 				backing.graphics.c();
@@ -209,10 +187,36 @@
 				//loop through/resize row pegs
 				for(var j=0; j<slots; j++){
 					var peg = pegCont.getChildAt(j);
-					peg.graphics.c();
-					peg.graphics.f("#999").drawCircle(pegW*(j-1), rowH/2, rowH*.4);
-					// console.log("peg!");
+					// console.log(peg.colourNum);
+					if (peg.colourNum == undefined){
+						peg.graphics.c();
+						peg.graphics.f("#999").drawCircle(pegW*(j-1), rowH/2, rowH*.4);
+					}else{
+						peg.graphics.c();
+						peg.graphics.f(colourCodes[peg.colourNum]).drawCircle(pegW*(peg.position-1), rowH*0.5, rowH*.4);
+					}
+
 				}
+
+				// event listener - changing peg colour property
+				pegCont.on("mousedown", function(e){
+					var peg = e.target;
+					if(peg.number == activeAttempt){
+						//set new colour value
+						//add colored marble graphic
+						if(peg.colourNum < 2){
+							peg.colourNum += 1;
+						}else{
+							peg.colourNum = 0;
+						}
+						peg.colour = colours[peg.colourNum];
+						// console.log(peg.number, peg.colourNum, peg.colour);
+
+						peg.graphics.c();
+						peg.graphics.f(colourCodes[peg.colourNum]).drawCircle(pegW*(peg.position-1), rowH*0.5, rowH*.4);
+						stage.update();
+					}
+				});
 
 			// style/size row submit button
 			var submit = row.getChildAt(3);
@@ -225,7 +229,7 @@
 		// button resize function
 		function sizeNewBtn(){
 			//redefine sizing variables
-			var btnH = stageH*0.05;
+			var btnH = stageH*0.06;
 			var btnW = stageW*0.4;
 
 			newBtn.graphics.c();
@@ -241,8 +245,8 @@
 		function check(e){
 			// console.log("checking...");
 			if (e.target.number == activeAttempt){
+				var btn = e.target;
 				var submit = [];
-
 				//grab the associated attempt container...
 				//grab the peg container inside...
 				//loop through the pegs inside and add the colour name property to the array...
@@ -253,7 +257,7 @@
 					var peg = pegs.getChildAt(i);
 					submit.push(peg.colour);
 				}
-				console.log(submit);
+				// console.log(submit);
 				//compare submit array to answer key array...
 
 				if(submit.toString() == answerKey.toString()){
@@ -261,19 +265,28 @@
 				}else if(activeAttempt==10){
 					lose();
 				}else{
-
+					var rightPegs = 0;
+					var halfRightPegs = 0;
 					//if the peg is in the right place and the right color ++rightPeg
 					//if the peg is the right color, but not the right peg, ++halfRightPeg
-
-					var rightPeg = 0;
-					var halfRightPeg = 0;
-
+					for(var i=0; i<slots; i++){
+						if(submit[i] == answerKey[i]){
+							rightPegs++;
+						}
+					}
 					//remove submit button from row
+					btn.graphics.c();
 					//replace with rightPeg and halfRightPeg numbers
+					var rightTxt = new createjs.Text(rightPegs, stageH*0.04+"px Arial", "green");
+					rightTxt.textAlign="center";
+					rightTxt.textBaseline = "middle";
+					rightTxt.x = stageW- (pegW-margin);
+					rightTxt.y = rowH/2;
+					row.addChild(rightTxt);
 
+					console.log(rightPegs);
 					activeAttempt ++;
-					console.log(activeAttempt);
-					console.log(answerKey);
+					stage.update();
 				}
 			}
 		}
