@@ -57,7 +57,7 @@
 		var numRows = numAttempts+2;
 
 		//variables affected by resizing
-		var rowH = stageH*0.1;
+		var rowH = stageH*0.075;
 		var rowW = stageW*0.95;
 		var margin = stageH*.025;
 		var pegW = stageW/6;
@@ -277,6 +277,7 @@
 				}
 				// console.log(submit);
 				//compare submit array to answer key array...
+				if (submit.length != 4) return;
 
 				if(submit.toString() == answerKey.toString()){
 					win();
