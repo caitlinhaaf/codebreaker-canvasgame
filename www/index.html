@@ -92,6 +92,10 @@
 			//regenerate rows
 			//reset active attempt number to 1
 			generateKey();
+			rows.removeAllChildren();
+			addRows();
+			sizeRows();
+			activeAttempt = 1;
 			stage.update();
 		});
 
@@ -102,9 +106,12 @@
 		stage.addChild(rows);
 
 		//put this into a separate function and run it on when the stage is reset (new game?)
-		for(var i=0; i<10; i++){
-			createRow(i+1);
+		function addRows(){
+			for(var i=0; i<numAttempts; i++){
+				createRow(i+1);
+			}
 		}
+		addRows();
 		sizeRows();
 
 		//------------------------------------------
