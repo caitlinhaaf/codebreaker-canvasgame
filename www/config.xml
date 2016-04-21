@@ -20,6 +20,9 @@
     <platform name="ios">
       <!-- iPhone 6 / 6+ -->
         <icon src="icon/ios/icon-60@3x.png" width="180" height="180" />
+      <!-- iPhone / iPod Touch  -->
+  		<icon src="icon/ios/icon-60.png" width="60" height="60" />
+  		<icon src="icon/ios/icon-60@2x.png" width="120" height="120" />
     </platform>
 
     <plugin name="cordova-plugin-whitelist" spec="1" />
