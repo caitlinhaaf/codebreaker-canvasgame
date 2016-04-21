@@ -238,7 +238,7 @@
 			}else{
 				var submit = row.getChildAt(3);
 				submit.graphics.c();
-				submit.graphics.f("black").drawRect(pegW*5+margin, rowH*.1, rowH*.8, rowH*.8);
+				submit.graphics.f("black").drawRect(stageW-rowH*1.5, 0, rowH*1.5, rowH);
 			}
 			//end of row loop
 			}
@@ -295,7 +295,7 @@
 					//remove submit button from row
 					btn.graphics.c();
 					//replace with rightPeg and halfRightPeg numbers
-					var rightTxt = new createjs.Text(rightPegs, stageH*0.04+"px Arial", "green");
+					var rightTxt = new createjs.Text(rightPegs, stageH*0.04+"px Source Sans Pro", "green");
 					rightTxt.textAlign="center";
 					rightTxt.textBaseline = "middle";
 					rightTxt.x = stageW - (pegW-margin*2);
@@ -331,7 +331,7 @@
 			answerKey = [];
 			var colour;
 			for(var i=0; i<slots; i++){
-				colour = colours[ Math.floor(Math.random()*colours.length) ];
+				colour = colours[Math.floor(Math.random()*colours.length) ];
 				answerKey.push(colour);
 			}
 			console.log("answer key: "+ answerKey);
