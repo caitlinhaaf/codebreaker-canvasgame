@@ -25,15 +25,15 @@
 		//LOAD IMAGES
 		//------------------------
 		var btn1 = new Image();
-    btn1.src = "assets/greenmarble.svg";
+    btn1.src = "assets/greenmarble.png";
 		var gBtn = new createjs.Bitmap(btn1);
 
 		var btn2 = new Image();
-    btn2.src = "assets/bluemarble.svg";
+    btn2.src = "assets/bluemarble.png";
 		var bBtn = new createjs.Bitmap(btn2);
 
 		var btn3 = new Image();
-    btn3.src = "assets/yellowmarble.svg";
+    btn3.src = "assets/yellowmarble.png";
 		var yBtn = new createjs.Bitmap(btn3);
 
 		//GLOBAL VARIABLES
@@ -64,7 +64,8 @@
 
 		var colours = ["green", "blue", "yellow"];
 		//add array of marble images
-		var marbles = [gBtn, bBtn, yBtn];
+		// var marbles = [gBtn, bBtn, yBtn];
+		var colourCodes = ["#B2D235", "#00AEEF", "#FFF200"];
 		var answerKey = [];
 
 		//add tutorial/help panes to swipe through (intro and in help button/section)
@@ -142,6 +143,7 @@
 				peg.number = attempt;
 				peg.colourNum = 0;
 				peg.colour;
+				peg.position = i;
 			}
 
 			// event listener - changing peg colour property
@@ -157,6 +159,10 @@
 					}
 					peg.colour = colours[peg.colourNum];
 					console.log(peg.number, peg.colourNum, peg.colour);
+
+					peg.graphics.c();
+					peg.graphics.f(colourCodes[peg.colourNum]).drawCircle(pegW*(peg.position-1), rowH*0.55, rowH*.5);
+					stage.update();
 				}
 			});
 
@@ -204,8 +210,7 @@
 				for(var j=0; j<slots; j++){
 					var peg = pegCont.getChildAt(j);
 					peg.graphics.c();
-					peg.graphics.f("#999").drawCircle(pegW*(j-1), rowH/2, rowH*.4)
-					.drawCircle(pegW*(j-1), rowH/2, rowH*.4);
+					peg.graphics.f("#999").drawCircle(pegW*(j-1), rowH/2, rowH*.4);
 					// console.log("peg!");
 				}
 
