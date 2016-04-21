@@ -161,6 +161,9 @@
 			submit.on("click", check);
 			attemptCont.addChild(submit);
 
+			var arrow = new createjs.Text(">", "bold "+stageH*0.04+"px Arial", "white");
+			attemptCont.addChild(arrow);
+
 		//end of createRow function
 		}
 
@@ -230,7 +233,7 @@
 
 			// style/size row submit button OR number of right pegs
 			if (row.submit){
-				console.log("sizing number...");
+				// console.log("sizing number...");
 				var rightTxt = row.getChildAt(4);
 				rightTxt.x = stageW - (pegW-margin*2);
 				rightTxt.y = rowH/2;
@@ -239,6 +242,10 @@
 				var submit = row.getChildAt(3);
 				submit.graphics.c();
 				submit.graphics.f("black").drawRect(stageW-rowH*1.2, 0, rowH*1.2, rowH);
+				// add submit arrow
+				var arrow = row.getChildAt(4);
+				arrow.y = rowH*.2;
+				arrow.x = stageW-(stageW*0.075);
 			}
 			//end of row loop
 			}
@@ -295,6 +302,7 @@
 					}
 					//remove submit button from row
 					btn.graphics.c();
+					row.removeChildAt(4)
 					//replace with rightPeg and halfRightPeg numbers
 					var rightTxt = new createjs.Text(rightPegs, stageH*0.04+"px Arial", "green");
 					rightTxt.textAlign="center";
