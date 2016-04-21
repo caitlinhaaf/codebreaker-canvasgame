@@ -118,6 +118,8 @@
 			//add container
 			var attemptCont = new createjs.Container();
 			attemptCont.number = attempt;
+			attemptCont.submit = false;
+			attemptCont.rightPegs = 0;
 
 			var backing = new createjs.Shape();
 			// attemptCont.backing = backing;
@@ -150,6 +152,7 @@
 			submit.number = attempt;
 			submit.on("click", check);
 			attemptCont.addChild(submit);
+
 		//end of createRow function
 		}
 
@@ -218,14 +221,23 @@
 					}
 				});
 
-			// style/size row submit button
-			var submit = row.getChildAt(3);
-			submit.graphics.c();
-			submit.graphics.f("black").drawRect(pegW*5, rowH*.1, rowH*.8, rowH*.8);
+			// style/size row submit button OR number of right pegs
+			if (row.submit){
+				console.log("sizing number...");
+				var rightTxt = row.getChildAt(4);
+				// rightPegTxt = row.rightPegs;
+				rightTxt.x = stageW- (pegW-margin);
+				rightTxt.y = rowH/2;
+				// row.addChild(rightTxt);
+			}else{
+				var submit = row.getChildAt(3);
+				submit.graphics.c();
+				submit.graphics.f("black").drawRect(pegW*5, rowH*.1, rowH*.8, rowH*.8);
+			}
+			//end of row loop
 			}
 	//end of size rows function
 	}
-
 		// button resize function
 		function sizeNewBtn(){
 			//redefine sizing variables
@@ -283,6 +295,9 @@
 					rightTxt.x = stageW- (pegW-margin);
 					rightTxt.y = rowH/2;
 					row.addChild(rightTxt);
+
+					row.submit = true;
+					row.rightPegs = rightPegs;
 
 					console.log(rightPegs);
 					activeAttempt ++;
