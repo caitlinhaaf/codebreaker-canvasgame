@@ -8,6 +8,10 @@
         Caitin Haaf
     </author>
     <content src="index.html" />
+
+    <preference name="orientation"                value="portrait" />        <!-- all: default means both landscape and portrait are enabled -->
+
+
     <plugin name="cordova-plugin-whitelist" spec="1" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
