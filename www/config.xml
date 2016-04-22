@@ -26,6 +26,9 @@
     </platform>
 
     <splash src="splash.png" width="320" height="480" />
+    <platform name="ios">
+      <splash src="splash/portrait/ios/Default.png" width="320" height="480" />
+    </platform>
 
     <plugin name="cordova-plugin-whitelist" spec="1" />
     <access origin="*" />
