@@ -15,63 +15,44 @@
 
   // SWIPING IN CREATEJS
   haaf.cjsSwipe = function(obj){
-    //variables
-    var distance = 30;
-    var time = 200;
-    var mouseX;
-    var mouseY;
+    if (obj == null) return;
+          if (obj.getStage == null) return;
+          var stage = obj.getStage();
 
-    obj.addEventListener("mousedown", clickCapture);
+          var swipeDistance = 5;
+          var swipeTime = 100;
 
-    function clickCapture(e){
-      // console.log(e.stageX, e.stageY);
-      var startX = e.stageX;
-      var startY = e.stageY;
+          obj.on("mousedown", function(){
+              var startX = stage.mouseX;
+              var startY = stage.mouseY;
+              var swipeTimeout = setTimeout(function() {
+                  var newX = stage.mouseX;
+                  var newY = stage.mouseY;
+                  // console.log(newX - startX);
+                  // console.log(newY - startY);
+                  var diffX = Math.abs(newX-startX);
+                  var diffY = Math.abs(newY-startY);
+                  if (diffX < swipeDistance && diffY < swipeDistance) return;
+                  var e = new createjs.Event("swipe");
+                  if (diffX > diffY) {
+                      // console.log("swiping in X");
+                      e.swipeX = (newX-startX>1) ? 1 : -1;
+                      e.swipeY = 0;
+                  } else {
+                      // console.log("swiping in Y");
+                      e.swipeX = 0
+                      e.swipeY = (newY-startY>1) ? 1 : -1;
+                  }
+                  obj.dispatchEvent(e);
+                  // obj.dispatchEvent("swipe");
+              }, swipeTime);
+              var up = obj.on("pressup", function() {
+                  clearTimeout(swipeTimeout);
+                  obj.off("pressup", up);
+              });
+          });
 
-      document.addEventListener("mousemove", mouseEvent);
-      function mouseEvent(e){
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        // console.log(e.clientX, e.clientY);
       }
-
-      var swipeTimeout = setTimeout(function(){
-        var diffX = mouseX - startX;
-        var diffY = mouseY - startY;
-
-        document.removeEventListener("mousemove", mouseEvent);
-        // console.log(diffX, diffY);
-
-        var swipeX = 0;
-        var swipeY = 0;
-
-        if(Math.abs(diffX) > Math.abs(diffY)){
-          // detecting swipe along x axis
-          if(diffX <- distance){swipeX = -1;}
-          if(diffX > distance){swipeX = 1;}
-        }else{
-          // detecting swipe along y axis
-          if (diffY <- distance){swipeY = -1;}
-          if(diffY > distance){swipeY = 1;}
-        }
-
-        // create custom event called swipe
-        // console.log(swipeX, swipeY);
-        var e = new Event("swipe");
-        e.swipeX = swipeX;
-        e.swipeY = swipeY;
-        obj.dispatchEvent(e);
-
-        //seems to be storing this information - repeating swipe number if square is then just clicked..
-        // clear afterwards? clear on mouseup?
-        // startX = startY = mouseX = mouseY = 0;
-
-      }, time);
-    //end of clickCapture function
-    }
-
-
-  }
 
   // SWIPING IN THE DOM
   haaf.swipe = function(obj){
