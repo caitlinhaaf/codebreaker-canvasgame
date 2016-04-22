@@ -40,9 +40,9 @@
 <body>
 	<script>
 	//disable scrolling
-	document.body.addEventListener('touchmove', function(event) {
-	event.preventDefault();
-	}, false);
+	// document.body.addEventListener('touchmove', function(event) {
+	// event.preventDefault();
+	// }, false);
 
 	window.addEventListener("load", app);
 
@@ -62,22 +62,19 @@
 		sizeStage();
 
 		//get and move instructions div.
-		var instructions = document.getElementById("instructions");
-		instructions.style.width = stageW + "px";
-		instructions.style.height = stageH + "px";
-		instructions.style.cursor = "pointer";
-
-		var x = 0;
-		// var distance = 350;
-		haaf.swipe(instructions);
-		instructions.addEventListener("swipe", function(e) {
-				console.log(e.swipeX, e.swipeY);
-				if(e.swipeX != -1) return;
-				x += stageW * e.swipeX;
-				instructions.style.left = x + "px";
-		});
-
-
+		// var instructions = document.getElementById("instructions");
+		// instructions.style.width = stageW + "px";
+		// instructions.style.height = stageH + "px";
+		// instructions.style.cursor = "pointer";
+		// var x = 0;
+		// // var distance = 350;
+		// haaf.swipe(instructions);
+		// instructions.addEventListener("swipe", function(e) {
+		// 		console.log(e.swipeX, e.swipeY);
+		// 		if(e.swipeX != -1) return;
+		// 		x += stageW * e.swipeX;
+		// 		instructions.style.left = x + "px";
+		// });
 
 		var activeAttempt = 1;
 		var numAttempts = 10;
@@ -86,10 +83,15 @@
 		var numRows = numAttempts+2;
 
 		//variables affected by resizing
-		var rowH = stageH*0.075;
-		var rowW = stageW*0.95;
-		var margin = stageH*.025;
-		var pegW = stageW/6;
+		var rowH;
+		var rowW;
+		var margin;
+		var pegW;
+
+		// var rowH = stageH*0.075;
+		// var rowW = stageW*0.95;
+		// var margin = stageH*.025;
+		// var pegW = stageW/6;
 
 		var colours = ["green", "blue", "orange"];
 		var colourCodes = ["#cdf03c", "#50a89c", "#fd5a37"];
@@ -103,49 +105,189 @@
 		//add tutorial/help panes to swipe through (intro and in help button/section)
 
 
-		generateKey();
-
-		//add new game button
+		//game set-up
 		var newGameC = new createjs.Container();
 		newGameC.cursor = "pointer";
 		stage.addChild(newGameC);
 
 		var newBtn = new createjs.Shape();
-		newGameC.addChild(newBtn)
+		newGameC.addChild(newBtn);
 
-		var newBtnTxt = new createjs.Text("NEW GAME", "bold "+stageH*0.03+"px Arial", "white");
-		newGameC.addChild(newBtnTxt);
-		sizeNewBtn();
+		var newBtnTxt;
+		var rows;
 
-		//clear and repopulate stage on click
-		newGameC.on("mousedown", function(){
-			// stage.removeAllChildren();
+		game();
 
-			//remove all rows from attemptCont
-			//regenerate rows
-			//reset active attempt number to 1
+
+		//set up of the game screen.
+		function game(){
 			generateKey();
-			rows.removeAllChildren();
+
+			//add new game button
+			newBtnTxt = new createjs.Text("NEW GAME", "bold "+stageH*0.03+"px Arial", "white");
+			newGameC.addChild(newBtnTxt);
+			sizeNewBtn();
+
+			//clear and repopulate stage on click
+			newGameC.on("mousedown", function(){
+				generateKey();
+				rows.removeAllChildren();
+				addRows();
+				sizeRows();
+				activeAttempt = 1;
+				stage.update();
+			});
+
+			//TODO generate "answer" row (static until correctly answered)
+			// generate 10 "attempt" rows, each row in a container with number on the left-hand side
+			rows = new createjs.Container();
+			stage.addChild(rows);
+
+			//put this into a separate function and run it on when the stage is reset (new game?)
+			function addRows(){
+				for(var i=0; i<numAttempts; i++){
+					createRow(i+1);
+				}
+			}
+
 			addRows();
 			sizeRows();
-			activeAttempt = 1;
-			stage.update();
-		});
 
-		//TODO generate "answer" row (static until correctly answered)
+			function createRow(attempt){
+				//add container
+				var attemptCont = new createjs.Container();
+				attemptCont.number = attempt;
+				attemptCont.submit = false;
+				attemptCont.rightPegs = 0;
 
-		// generate 10 "attempt" rows, each row in a container with number on the left-hand side
-		var rows = new createjs.Container();
-		stage.addChild(rows);
+				var backing = new createjs.Shape();
+				// attemptCont.backing = backing;
+				attemptCont.addChild(backing);
 
-		//put this into a separate function and run it on when the stage is reset (new game?)
-		function addRows(){
-			for(var i=0; i<numAttempts; i++){
-				createRow(i+1);
+				// add attempt (row) number
+				var numTxt = new createjs.Text(attempt, "bold "+stageH*0.04+"px Arial", "white");
+				numTxt.textAlign="center";
+				numTxt.textBaseline = "middle";
+				attemptCont.addChild(numTxt);
+
+				rows.addChild(attemptCont);
+
+				//add "pegs" to a peg container
+				var pegCont = new createjs.Container();
+				attemptCont.addChild(pegCont);
+
+				var peg;
+				for(var i=0; i<slots; i++){
+					// console.log("new peg");
+					peg = new createjs.Shape();
+					pegCont.addChild(peg);
+					peg.number = attempt;
+					peg.colourNum;
+					peg.colour;
+					peg.position = i;
+
+					// event listener - changing peg colour property
+					pegCont.on("mousedown", function(e){
+						var peg = e.target;
+						if(peg.number == activeAttempt){
+							//set new colour value
+							//add colored marble graphic
+							if(peg.colourNum < 2){
+								peg.colourNum += 1;
+							}else{
+								peg.colourNum = 0;
+							}
+							peg.colour = colours[peg.colourNum];
+							// console.log(peg.number, peg.colourNum, peg.colour);
+
+							peg.graphics.c();
+							peg.graphics.f(colourCodes[peg.colourNum]).drawCircle(pegW*(peg.position-1), rowH*0.5, rowH*.4);
+							stage.update();
+						}
+					});
+				}
+				//add row submit button
+				var submit = new createjs.Shape();
+				submit.number = attempt;
+				submit.on("click", check);
+				attemptCont.addChild(submit);
+
+				var arrow = new createjs.Text(">", "bold "+stageH*0.04+"px Arial", "white");
+				attemptCont.addChild(arrow);
+			//end of createRow function
 			}
+
+
+			//WIN/LOSE LOGIC AND CHECKS
+			//---------------------------------
+			function check(e){
+				// console.log("checking...");
+				if (e.target.number == activeAttempt){
+					var btn = e.target;
+					var submit = [];
+					//grab the associated attempt container...
+					//grab the peg container inside...
+					//loop through the pegs inside and add the colour name property to the array...
+					var row = rows.getChildAt(activeAttempt-1);
+					var pegs = row.getChildAt(2);
+					// console.log(row);
+					for(var i=0; i<slots; i++){
+						var peg = pegs.getChildAt(i);
+						submit.push(peg.colour);
+					}
+					// console.log(submit);
+					//compare submit array to answer key array...
+					if (submit.length != 4) return;
+
+					if(submit.toString() == answerKey.toString()){
+						win();
+					}else if(activeAttempt==10){
+						lose();
+					}else{
+						var rightPegs = 0;
+						var halfRightPegs = 0;
+						//if the peg is in the right place and the right color ++rightPeg
+						//if the peg is the right color, but not the right peg, ++halfRightPeg
+						for(var i=0; i<slots; i++){
+							if(submit[i] == answerKey[i]){
+								rightPegs++;
+							}
+						}
+						//remove submit button from row
+						btn.graphics.c();
+						row.removeChildAt(4)
+						//replace with rightPeg and halfRightPeg numbers
+						var rightTxt = new createjs.Text(rightPegs, stageH*0.04+"px Arial", green);
+						rightTxt.textAlign="center";
+						rightTxt.textBaseline = "middle";
+						rightTxt.x = stageW - stageW*.075;
+						rightTxt.y = rowH/2;
+						row.addChild(rightTxt);
+
+						row.submit = true;
+						row.rightPegs = rightPegs;
+
+						console.log(rightPegs);
+						activeAttempt ++;
+						stage.update();
+					}
+				}
+			}
+
+			function win(){
+				//dislay win message in window
+				//add new game btn
+				console.log("you win!");
+			}
+
+			function lose(){
+				//dislay win message in window
+				//add new game btn
+				console.log("you lose");
+			}
+
+		//end of game function
 		}
-		addRows();
-		sizeRows();
 
 		//------------------------------------------
 
@@ -154,74 +296,77 @@
 
 		// ----------------------------------------------
 
-		function createRow(attempt){
-			//add container
-			var attemptCont = new createjs.Container();
-			attemptCont.number = attempt;
-			attemptCont.submit = false;
-			attemptCont.rightPegs = 0;
 
-			var backing = new createjs.Shape();
-			// attemptCont.backing = backing;
-			attemptCont.addChild(backing);
-
-			// add attempt (row) number
-			var numTxt = new createjs.Text(attempt, "bold "+stageH*0.04+"px Arial", "white");
-			numTxt.textAlign="center";
-			numTxt.textBaseline = "middle";
-			attemptCont.addChild(numTxt);
-
-			rows.addChild(attemptCont);
-
-			//add "pegs" to a peg container
-			var pegCont = new createjs.Container();
-			attemptCont.addChild(pegCont);
-
-			var peg;
+		// ANSWER KEY FUNCTION
+		//---------------------------------
+		//randomly generate answer key (4 colours in secquence)
+		function generateKey(){
+			answerKey = [];
+			var colour;
 			for(var i=0; i<slots; i++){
-				// console.log("new peg");
-				peg = new createjs.Shape();
-				pegCont.addChild(peg);
-				peg.number = attempt;
-				peg.colourNum;
-				peg.colour;
-				peg.position = i;
-
-				// event listener - changing peg colour property
-				pegCont.on("mousedown", function(e){
-					var peg = e.target;
-					if(peg.number == activeAttempt){
-						//set new colour value
-						//add colored marble graphic
-						if(peg.colourNum < 2){
-							peg.colourNum += 1;
-						}else{
-							peg.colourNum = 0;
-						}
-						peg.colour = colours[peg.colourNum];
-						// console.log(peg.number, peg.colourNum, peg.colour);
-
-						peg.graphics.c();
-						peg.graphics.f(colourCodes[peg.colourNum]).drawCircle(pegW*(peg.position-1), rowH*0.5, rowH*.4);
-						stage.update();
-					}
-				});
+				colour = colours[Math.floor(Math.random()*colours.length) ];
+				answerKey.push(colour);
 			}
-			//add row submit button
-			var submit = new createjs.Shape();
-			submit.number = attempt;
-			submit.on("click", check);
-			attemptCont.addChild(submit);
-
-			var arrow = new createjs.Text(">", "bold "+stageH*0.04+"px Arial", "white");
-			attemptCont.addChild(arrow);
-
-		//end of createRow function
+			console.log("answer key: "+ answerKey);
 		}
 
-		//FUNCTIONS TO RESIZE COMPONENTS
+		//MAKE CANVAS FUNCTION
+		//---------------------------------
+		function makeCanvas() {
+			// make a canvas tag and apply attributes for id, width and height
+			var canvas = document.createElement("canvas");
+			canvas.setAttribute("id", "myCanvas");
+
+			// get maximum size for canvas
+			// note: iOS6 does not work from loading icon unless keep canvas within device size
+			// thank you apple for this and many other days of hell
+			largest = Math.max(window.innerWidth, screen.width, window.innerHeight, screen.height);
+			if (!/ip(hone|od|ad)/i.test(navigator.userAgent)) largest *= 3; // handle up to three monitors
+			canvas.setAttribute("width", largest);
+			canvas.setAttribute("height", largest);
+			// add our canvas tag
+			document.body.appendChild(canvas);
+			// stop the canvas from moving when certain keys are pressed (pgdwn, pgup, arrows, home, end)
+			// and stop scrollwheel from moving page
+			var a = function(e) {
+				if (!e) e = event;
+				if (e.keyCode && (e.keyCode >= 32 && e.keyCode <= 40)) e.preventDefault();
+			}
+			var b = function(e) {
+				if (!e) e = event;
+				e.preventDefault();
+			}
+			var c = b;
+			window.addEventListener("keydown", a);
+			window.addEventListener("mousewheel", b);
+			window.addEventListener("DOMMouseScroll", c);
+			window.addEventListener('resize', function() {
+				sizeStage();
+				if (/android|nexus/i.test(navigator.userAgent)) {
+					setTimeout(function() {
+						sizeStage();
+					}, 500); // to catch delayed screen sizes
+				}
+			});
+		}
+
+		//SIZING/RESIZING STAGE FUNCTIONS
 		//---------------------------------
 
+		// button resize function
+		function sizeNewBtn(e){
+			//redefine sizing variables
+			var btnH = stageH*0.08;
+			// var btnW = stageW;
+			newBtn.graphics.c();
+			newBtn.graphics.f(dkgreen).drawRect(0,stageH-(btnH),stageW,btnH);
+			var txtW = newBtnTxt.getBounds().width;
+			var txtH = newBtnTxt.getBounds().height;
+			newBtnTxt.x = stageW/2 - txtW/2;
+			newBtnTxt.y = stageH - btnH + 15;
+		}
+
+		//row resizing function
 		function sizeRows(){
 			var rowH = stageH*0.075;
 			// var rowW = stageW*0.95;
@@ -283,156 +428,25 @@
 			}
 	//end of size rows function
 	}
-		// button resize function
-		function sizeNewBtn(){
-			//redefine sizing variables
-			var btnH = stageH*0.08;
-			// var btnW = stageW;
 
-			newBtn.graphics.c();
-			newBtn.graphics.f(dkgreen).drawRect(0,stageH-(btnH),stageW,btnH);
-			var txtW = newBtnTxt.getBounds().width;
-			var txtH = newBtnTxt.getBounds().height;
-			newBtnTxt.x = stageW/2 - txtW/2;
-			newBtnTxt.y = stageH - btnH + 15;
-		}
+	function sizeStage() {
+		// earlier than IE9 does not have innerWidth
+		// inner is better on mobile when zoomed so can't always use client
+		stageW = isNaN(window.innerWidth) ? window.clientWidth : window.innerWidth;
+		stageH = isNaN(window.innerHeight) ? window.clientHeight : window.innerHeight;
 
-		//WIN/LOSE LOGIC AND CHECKS
-		//---------------------------------
-		function check(e){
-			// console.log("checking...");
-			if (e.target.number == activeAttempt){
-				var btn = e.target;
-				var submit = [];
-				//grab the associated attempt container...
-				//grab the peg container inside...
-				//loop through the pegs inside and add the colour name property to the array...
-				var row = rows.getChildAt(activeAttempt-1);
-				var pegs = row.getChildAt(2);
-				// console.log(row);
-				for(var i=0; i<slots; i++){
-					var peg = pegs.getChildAt(i);
-					submit.push(peg.colour);
-				}
-				// console.log(submit);
-				//compare submit array to answer key array...
-				if (submit.length != 4) return;
+		rowH = stageH*0.075;
+		rowW = stageW*0.95;
+		margin = stageH*.025;
+		pegW = stageW/6;
 
-				if(submit.toString() == answerKey.toString()){
-					win();
-				}else if(activeAttempt==10){
-					lose();
-				}else{
-					var rightPegs = 0;
-					var halfRightPegs = 0;
-					//if the peg is in the right place and the right color ++rightPeg
-					//if the peg is the right color, but not the right peg, ++halfRightPeg
-					for(var i=0; i<slots; i++){
-						if(submit[i] == answerKey[i]){
-							rightPegs++;
-						}
-					}
-					//remove submit button from row
-					btn.graphics.c();
-					row.removeChildAt(4)
-					//replace with rightPeg and halfRightPeg numbers
-					var rightTxt = new createjs.Text(rightPegs, stageH*0.04+"px Arial", green);
-					rightTxt.textAlign="center";
-					rightTxt.textBaseline = "middle";
-					rightTxt.x = stageW - stageW*.075;
-					rightTxt.y = rowH/2;
-					row.addChild(rightTxt);
+		// if wider than high then we have horizontal (or landscape)
+		// orientation = (stageW>stageH) ? "horizontal" : "vertical";
 
-					row.submit = true;
-					row.rightPegs = rightPegs;
-
-					console.log(rightPegs);
-					activeAttempt ++;
-					stage.update();
-				}
-			}
-		}
-
-		function win(){
-			//dislay win message in window
-			//add new game btn
-			console.log("you win!");
-		}
-
-		function lose(){
-			//dislay win message in window
-			//add new game btn
-			console.log("you lose");
-		}
-
-		// ANSWER KEY FUNCTION
-		//---------------------------------
-		//randomly generate answer key (4 colours in secquence)
-		function generateKey(){
-			answerKey = [];
-			var colour;
-			for(var i=0; i<slots; i++){
-				colour = colours[Math.floor(Math.random()*colours.length) ];
-				answerKey.push(colour);
-			}
-			console.log("answer key: "+ answerKey);
-		}
-
-		//MAKE CANVAS FUNCTION
-		//---------------------------------
-		function makeCanvas() {
-			// make a canvas tag and apply attributes for id, width and height
-			var canvas = document.createElement("canvas");
-			canvas.setAttribute("id", "myCanvas");
-
-			// get maximum size for canvas
-			// note: iOS6 does not work from loading icon unless keep canvas within device size
-			// thank you apple for this and many other days of hell
-			largest = Math.max(window.innerWidth, screen.width, window.innerHeight, screen.height);
-			if (!/ip(hone|od|ad)/i.test(navigator.userAgent)) largest *= 3; // handle up to three monitors
-			canvas.setAttribute("width", largest);
-			canvas.setAttribute("height", largest);
-			// add our canvas tag
-			document.body.appendChild(canvas);
-			// stop the canvas from moving when certain keys are pressed (pgdwn, pgup, arrows, home, end)
-			// and stop scrollwheel from moving page
-			var a = function(e) {
-				if (!e) e = event;
-				if (e.keyCode && (e.keyCode >= 32 && e.keyCode <= 40)) e.preventDefault();
-			}
-			var b = function(e) {
-				if (!e) e = event;
-				e.preventDefault();
-			}
-			var c = b;
-			window.addEventListener("keydown", a);
-			window.addEventListener("mousewheel", b);
-			window.addEventListener("DOMMouseScroll", c);
-			window.addEventListener('resize', function() {
-				sizeStage();
-				if (/android|nexus/i.test(navigator.userAgent)) {
-					setTimeout(function() {
-						sizeStage();
-					}, 500); // to catch delayed screen sizes
-				}
-			});
-		}
-
-		//SIZING/RESIZING STAGE FUNCTIONS
-		//---------------------------------
-		function sizeStage() {
-			// earlier than IE9 does not have innerWidth
-			// inner is better on mobile when zoomed so can't always use client
-			stageW = isNaN(window.innerWidth) ? window.clientWidth : window.innerWidth;
-			stageH = isNaN(window.innerHeight) ? window.clientHeight : window.innerHeight;
-
-			// if wider than high then we have horizontal (or landscape)
-			orientation = (stageW>stageH) ? "horizontal" : "vertical";
-
-			if (stage) stage.setBounds(0,0,stageW,stageH);
-			// console.log(stageW, stageH);
-			if (ready) resize();
-		}
+		if (stage) stage.setBounds(0,0,stageW,stageH);
+		// console.log(stageW, stageH);
+		if (ready) resize();
+	}
 
 		resize = function() {
 			// here is where we put code to resize
@@ -445,7 +459,7 @@
 	</script>
 
 	<!-- INSTRUCTIONS BOX -->
-	<div class="instructions" id="instructions"></div>
+	<!-- <div class="instructions" id="instructions"></div> -->
 
 </body>
 </html>
