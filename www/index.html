@@ -51,7 +51,6 @@
 		var activeAttempt = 1;
 		var numAttempts = 10;
 		var slots = 4;
-
 		var numRows = numAttempts+2;
 
 		//variables affected by resizing
@@ -102,6 +101,10 @@
 			instructTxt.lineHeight = (stageH*0.03)*1.2;
 			instructions.addChild(instructTxt);
 
+			var swipeSym = new createjs.Text("<", stageH*0.1+"px Arial", "white");
+			swipeSym.textAlign = "center";
+			instructions.addChild(swipeSym);
+
 			//add swipe function
 			haaf.cjsSwipe(instructions);
 			instructions.addEventListener("swipe", function(e){
@@ -119,12 +122,17 @@
 			if(gamePlay) return;
 			var instructBack = instructions.getChildAt(0);
 			instructBack.graphics.c();
-			instructBack.graphics.f(dkgreen).drawRect(0,0,stageW,stageH);
+			instructBack.graphics.f("#333").drawRect(0,0,stageW,stageH);
 
 			var instructTxt = instructions.getChildAt(1);
 			instructTxt.x = stageW*0.1;
-			instructTxt.y = stageH*.3;
+			instructTxt.y = stageH*.4;
 			instructTxt.lineWidth = stageW*.8;
+
+			var swipeSym = instructions.getChildAt(2);
+			swipeSym.x = stageW*.5;
+			swipeSym.y = stageH*.6;
+
 		}
 
 		// RUN SET-UP FUNCTIONS
@@ -203,6 +211,9 @@
 					peg.colourNum;
 					peg.colour;
 					peg.position = i;
+
+					// add hit area (slightly larger circle)
+					hit = new createjs.Shape();
 
 					// event listener - changing peg colour property
 					pegCont.on("mousedown", function(e){
@@ -327,9 +338,6 @@
 			solveTxt.textAlign="center";
 			feedbackTxt.addChild(solveTxt);
 		}
-
-
-
 
 		// ANSWER KEY FUNCTION
 		//---------------------------------
