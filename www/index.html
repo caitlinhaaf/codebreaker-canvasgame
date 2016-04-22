@@ -22,11 +22,14 @@
 			width: 100vw;
 			height: inherit;*/
 
-			background-color: #B2D235;
+			background-color: #a1d63e;
 			z-index: 1;
 			position:absolute;
 			left:0px;
 			top:0px;
+			transition: 0.3;
+			-webkit-transition: all  0.5s ease-out; /* Safari */
+    transition: all 0.5s ease-out;
 		}
 	</style>
 
@@ -37,9 +40,9 @@
 <body>
 	<script>
 	//disable scrolling
-	// document.body.addEventListener('touchmove', function(event) {
-	// event.preventDefault();
-	// }, false);
+	document.body.addEventListener('touchmove', function(event) {
+	event.preventDefault();
+	}, false);
 
 	window.addEventListener("load", app);
 
@@ -62,7 +65,17 @@
 		var instructions = document.getElementById("instructions");
 		instructions.style.width = stageW + "px";
 		instructions.style.height = stageH + "px";
+		instructions.style.cursor = "pointer";
 
+		var x = 0;
+		// var distance = 350;
+		haaf.swipe(instructions);
+		instructions.addEventListener("swipe", function(e) {
+				console.log(e.swipeX, e.swipeY);
+				if(e.swipeX != -1) return;
+				x += stageW * e.swipeX;
+				instructions.style.left = x + "px";
+		});
 
 
 
