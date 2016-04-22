@@ -9,7 +9,13 @@
 
 	<style>
 		body {margin:0px; padding:0px; background-color:#000; overflow:hidden;}
-		#myCanvas {position:absolute; left:0px; top:0px; background-color:#FFF;}
+		#myCanvas {position:absolute; left:0px; top:0px; background-color:#FFF; z-index: -1;}
+		.instructions{
+			width: 100%;
+			height: 100vh;
+			background-color: #B2D235;
+			z-index: 1;
+		}
 	</style>
 
 	<script src="libraries/createjs-2015.11.26.min.js"></script>
@@ -62,10 +68,13 @@
 		var margin = stageH*.025;
 		var pegW = stageW/6;
 
-		var colours = ["green", "blue", "yellow"];
-		//add array of marble images
-		// var marbles = [gBtn, bBtn, yBtn];
-		var colourCodes = ["#B2D235", "#00AEEF", "#FFF200"];
+		var colours = ["green", "blue", "orange"];
+		var colourCodes = ["#cdf03c", "#50a89c", "#fd5a37"];
+		var green = "#cdf03c";
+		var dkgreen = "#a1d63e";
+		var blue = "#50a89c";
+		var brown = "#3f3b2f";
+
 		var answerKey = [];
 
 		//add tutorial/help panes to swipe through (intro and in help button/section)
@@ -134,7 +143,7 @@
 			attemptCont.addChild(backing);
 
 			// add attempt (row) number
-			var numTxt = new createjs.Text(attempt, stageH*0.04+"px Arial", "black");
+			var numTxt = new createjs.Text(attempt, "bold "+stageH*0.04+"px Arial", "white");
 			numTxt.textAlign="center";
 			numTxt.textBaseline = "middle";
 			attemptCont.addChild(numTxt);
@@ -154,6 +163,26 @@
 				peg.colourNum;
 				peg.colour;
 				peg.position = i;
+
+				// event listener - changing peg colour property
+				pegCont.on("mousedown", function(e){
+					var peg = e.target;
+					if(peg.number == activeAttempt){
+						//set new colour value
+						//add colored marble graphic
+						if(peg.colourNum < 2){
+							peg.colourNum += 1;
+						}else{
+							peg.colourNum = 0;
+						}
+						peg.colour = colours[peg.colourNum];
+						// console.log(peg.number, peg.colourNum, peg.colour);
+
+						peg.graphics.c();
+						peg.graphics.f(colourCodes[peg.colourNum]).drawCircle(pegW*(peg.position-1), rowH*0.5, rowH*.4);
+						stage.update();
+					}
+				});
 			}
 			//add row submit button
 			var submit = new createjs.Shape();
@@ -186,9 +215,9 @@
 				var backing = row.getChildAt(0);
 				backing.graphics.c();
 				if(row.number%2===0){
-					backing.graphics.f("#CCC");
+					backing.graphics.f("#333");
 				}else{
-					backing.graphics.f("#EEE");
+					backing.graphics.f("#111");
 				}
 				backing.graphics.drawRect(0,0,stageW, rowH);
 				// resize row text
@@ -211,37 +240,17 @@
 					}
 
 				}
-				// event listener - changing peg colour property
-				pegCont.on("mousedown", function(e){
-					var peg = e.target;
-					if(peg.number == activeAttempt){
-						//set new colour value
-						//add colored marble graphic
-						if(peg.colourNum < 2){
-							peg.colourNum += 1;
-						}else{
-							peg.colourNum = 0;
-						}
-						peg.colour = colours[peg.colourNum];
-						// console.log(peg.number, peg.colourNum, peg.colour);
-
-						peg.graphics.c();
-						peg.graphics.f(colourCodes[peg.colourNum]).drawCircle(pegW*(peg.position-1), rowH*0.5, rowH*.4);
-						stage.update();
-					}
-				});
-
 			// style/size row submit button OR number of right pegs
 			if (row.submit){
 				// console.log("sizing number...");
 				var rightTxt = row.getChildAt(4);
-				rightTxt.x = stageW - (pegW-margin*2);
+				rightTxt.x = stageW - stageW*.075;
 				rightTxt.y = rowH/2;
 				// row.addChild(rightTxt);
 			}else{
 				var submit = row.getChildAt(3);
 				submit.graphics.c();
-				submit.graphics.f("black").drawRect(stageW-rowH*1.2, 0, rowH*1.2, rowH);
+				submit.graphics.f(dkgreen).drawRect(stageW-rowH*1.2, 0, rowH*1.2, rowH);
 				// add submit arrow
 				var arrow = row.getChildAt(4);
 				arrow.y = rowH*.2;
@@ -258,7 +267,7 @@
 			// var btnW = stageW;
 
 			newBtn.graphics.c();
-			newBtn.graphics.f("#999").drawRect(0,stageH-(btnH),stageW,btnH);
+			newBtn.graphics.f(dkgreen).drawRect(0,stageH-(btnH),stageW,btnH);
 			var txtW = newBtnTxt.getBounds().width;
 			var txtH = newBtnTxt.getBounds().height;
 			newBtnTxt.x = stageW/2 - txtW/2;
@@ -304,10 +313,10 @@
 					btn.graphics.c();
 					row.removeChildAt(4)
 					//replace with rightPeg and halfRightPeg numbers
-					var rightTxt = new createjs.Text(rightPegs, stageH*0.04+"px Arial", "green");
+					var rightTxt = new createjs.Text(rightPegs, stageH*0.04+"px Arial", green);
 					rightTxt.textAlign="center";
 					rightTxt.textBaseline = "middle";
-					rightTxt.x = stageW - (pegW-margin*2);
+					rightTxt.x = stageW - stageW*.075;
 					rightTxt.y = rowH/2;
 					row.addChild(rightTxt);
 
@@ -411,5 +420,10 @@
 		//end of app function
 	}
 	</script>
+
+	<div class="instructions">
+
+	</div>
+
 </body>
 </html>
