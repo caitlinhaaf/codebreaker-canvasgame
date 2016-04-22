@@ -28,6 +28,7 @@
 	// document.body.addEventListener('touchmove', function(event) {
 	// event.preventDefault();
 	// }, false);
+	document.addEventListener("touchend", function(e) { e.preventDefault(); }, false);
 
 	window.addEventListener("load", app);
 
@@ -65,6 +66,7 @@
 		var pegW;
 
 		var newBtnTxt;
+		var solveTxt;
 		var rows;
 
 		var colours = ["green", "blue", "orange"];
@@ -73,8 +75,13 @@
 		var dkgreen = "#a1d63e";
 		var blue = "#50a89c";
 		var brown = "#3f3b2f";
+		var orange = "#fd5a37";
 
 		var answerKey = [];
+
+		var gameBacking = new createjs.Shape();
+		stage.addChild(gameBacking);
+
 		var newGameC = new createjs.Container();
 		newGameC.cursor = "pointer";
 		stage.addChild(newGameC);
@@ -91,8 +98,9 @@
 			instructBack.graphics.f(dkgreen).drawRect(0,0,stageW,stageH);
 			instructions.addChild(instructBack);
 
-			var instructTxt = new createjs.Text("Press the circles to select a colour sequence and figure out the code", "bold "+stageH*0.035+"px Arial", "white");
-			instructTxt.x = stageW*0.1;
+			var instructTxt = new createjs.Text("Press the circles to select a colour sequence and figure out the code", stageH*0.035+"px Arial", "white");
+			instructTxt.textAlign = "center";
+			instructTxt.x = stageW/2;
 			instructTxt.y = stageH*.3;
 			instructTxt.lineWidth = stageW*.8;
 			instructions.addChild(instructTxt);
@@ -124,14 +132,14 @@
 			createjs.Ticker.off("tick", ticker);
 			generateKey();
 
-			//add background
-			// var gameBack = new createjs.Shape();
-
+			solveTxt = new createjs.Text("?  ?  ?  ?", "bold "+stageH*0.07+"px Arial", orange);
+			solveTxt.textAlign="center";
+			stage.addChild(solveTxt);
 
 			//add new game button
 			newBtnTxt = new createjs.Text("NEW GAME", "bold "+stageH*0.03+"px Arial", "white");
 			newGameC.addChild(newBtnTxt);
-			sizeNewBtn();
+			sizeBtns();
 
 			//clear and repopulate stage on click
 			newGameC.on("mousedown", function(){
@@ -335,6 +343,19 @@
 			document.body.appendChild(canvas);
 			// stop the canvas from moving when certain keys are pressed (pgdwn, pgup, arrows, home, end)
 			// and stop scrollwheel from moving page
+			canvas.addEventListener("touchstart", function(e)
+			 {
+					 var ctx = canvas.getContext("2d");
+					//  var x = Math.random() * 320;
+					//  var y = Math.random() * 480;
+					//  var w = Math.random() * 100;
+					//  var h = Math.random() * 100;
+					//  ctx.fillStyle = "#FF0000";
+					//  ctx.fillRect(x,y,w,h);
+
+					 // FIX: Cancel the event
+					 e.preventDefault();
+			 }, false);
 			var a = function(e) {
 				if (!e) e = event;
 				if (e.keyCode && (e.keyCode >= 32 && e.keyCode <= 40)) e.preventDefault();
@@ -357,11 +378,12 @@
 			});
 		}
 
+
 		//SIZING/RESIZING STAGE FUNCTIONS
 		//---------------------------------
 
 		// button resize function
-		function sizeNewBtn(e){
+		function sizeBtns(e){
 			//redefine sizing variables
 			var btnH = stageH*0.08;
 			// var btnW = stageW;
@@ -371,10 +393,17 @@
 			var txtH = newBtnTxt.getBounds().height;
 			newBtnTxt.x = stageW/2 - txtW/2;
 			newBtnTxt.y = stageH - btnH + 15;
+
+			solveTxt.x = stageW/2;
+			solveTxt.y = rowH/2;
 		}
+
 
 		//row resizing function
 		function sizeRows(){
+			gameBacking.graphics.c();
+			gameBacking.graphics.f("#555").drawRect(0,0,stageW,stageH);
+
 			var rowH = stageH*0.075;
 			// var rowW = stageW*0.95;
 			var marginW = stageW*.025;
@@ -457,20 +486,12 @@
 
 		resize = function() {
 			// here is where we put code to resize
-			sizeNewBtn();
+			sizeBtns();
 			sizeRows();
 			stage.update();
 		}
 
 
-		// function touchInit(){
-		// // var el = document.getElementById("canvas")[0];
-		// canvas.addEventListener("touchstart", handleStart, false);
-		// canvas.addEventListener("touchend", handleEnd, false);
-		// canvas.addEventListener("touchcancel", handleCancel, false);
-		// canvas.addEventListener("touchmove", handleMove, false);
-		// log("initialized.");
-		// }
 
 	//end of app function
 	}
@@ -478,9 +499,6 @@
 
 
 	</script>
-
-	<!-- INSTRUCTIONS BOX -->
-	<!-- <div class="instructions" id="instructions"></div> -->
 
 </body>
 </html>

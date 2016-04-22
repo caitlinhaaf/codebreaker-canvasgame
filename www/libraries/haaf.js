@@ -1,7 +1,5 @@
   var haaf = function(haaf){
   // console.log("hi from swiping mod");
-
-
   haaf.shuffle = function(array) {
     if (array == null) return;
     var i = array.length, j, temp;
@@ -14,8 +12,6 @@
     }
     return array;
 }
-
-
 
   // SWIPING IN CREATEJS
   haaf.cjsSwipe = function(obj){
