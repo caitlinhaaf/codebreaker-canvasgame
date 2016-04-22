@@ -25,18 +25,6 @@
   		<icon src="icon/ios/icon-60@2x.png" width="120" height="120" />
     </platform>
 
-    <splash src="splash.png" width="320" height="480" />
-
-    <platform name="ios">
-      <splash src="splash/portrait/ios/Default.png" width="320" height="480" />
-      <splash src="splash/portrait/ios/Default@2x.png" width="640" height="960" />
-      <splash src="splash/portrait/ios/Default-568h@2x.png" width="640" height="1136" />
-      <splash src="splash/portrait/ios/Default-667h@2x.png" width="750" height="1334" />
-      <splash src="splash/portrait/ios/Default-Portrait-736h@3x.png" width="1242" height="2208" />
-      <splash src="splash/portrait/ios/Default-Portrait.png" width="768" height="1024" />
-      <splash src="splash/portrait/ios/Default-Portrait@2x.png" width="1536" height="2048" />
-    </platform>
-
     <plugin name="cordova-plugin-whitelist" spec="1" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
