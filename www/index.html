@@ -101,9 +101,18 @@
 			instructTxt.lineHeight = (stageH*0.03)*1.2;
 			instructions.addChild(instructTxt);
 
-			var swipeSym = new createjs.Text("<", stageH*0.1+"px Arial", "white");
+			var swipeSym = new createjs.Text("<", stageH*0.1+"px Arial", green);
 			swipeSym.textAlign = "center";
 			instructions.addChild(swipeSym);
+
+			var circles = new createjs.Container();
+			instructions.addChild(circles);
+			var blueC = new createjs.Shape();
+			circles.addChild(blueC);
+			var orangeC = new createjs.Shape();
+			circles.addChild(orangeC);
+			var greenC = new createjs.Shape();
+			circles.addChild(greenC);
 
 			//add swipe function
 			haaf.cjsSwipe(instructions);
@@ -126,12 +135,24 @@
 
 			var instructTxt = instructions.getChildAt(1);
 			instructTxt.x = stageW*0.1;
-			instructTxt.y = stageH*.4;
+			instructTxt.y = stageH*.45;
 			instructTxt.lineWidth = stageW*.8;
 
 			var swipeSym = instructions.getChildAt(2);
 			swipeSym.x = stageW*.5;
-			swipeSym.y = stageH*.6;
+			swipeSym.y = stageH*.7;
+
+			var circles = instructions.getChildAt(3);
+			var blueC = circles.getChildAt(0);
+			blueC.graphics.c();
+			blueC.graphics.f(blue).dc(stageW*0.2, stageH*0.3, stageW*.08);
+			var orangeC = circles.getChildAt(1);
+			orangeC.graphics.c();
+			orangeC.graphics.f(orange).dc(stageW*0.5, stageH*0.3, stageW*.08);
+			var greenC = circles.getChildAt(2);
+			greenC.graphics.c();
+			greenC.graphics.f(green).dc(stageW*0.8, stageH*0.3, stageW*.08);
+
 
 		}
 
