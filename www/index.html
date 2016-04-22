@@ -85,6 +85,9 @@
 		var newBtn = new createjs.Shape();
 		newGameC.addChild(newBtn);
 
+		var feedbackTxt = new createjs.Container();
+		stage.addChild(feedbackTxt);
+
 		var instructions
 		//add instruction box
 		function addInstruct(){
@@ -94,8 +97,9 @@
 			var instructBack = new createjs.Shape();
 			instructions.addChild(instructBack);
 
-			var instructTxt = new createjs.Text("Press the circles to select a colour sequence and figure out the code", stageH*0.035+"px Arial", "white");
-			instructTxt.textAlign = "center";
+			var instructTxt = new createjs.Text("Press the circles to select a colour sequence. Click submit to see how many pegs you guessed correctly. You've got 10 tries to guess the code!", stageH*0.03+"px Arial", "white");
+			// instructTxt.textAlign = "center";
+			instructTxt.lineHeight = (stageH*0.03)*1.2;
 			instructions.addChild(instructTxt);
 
 			//add swipe function
@@ -118,15 +122,10 @@
 			instructBack.graphics.f(dkgreen).drawRect(0,0,stageW,stageH);
 
 			var instructTxt = instructions.getChildAt(1);
-			instructTxt.x = stageW/2;
+			instructTxt.x = stageW*0.1;
 			instructTxt.y = stageH*.3;
 			instructTxt.lineWidth = stageW*.8;
 		}
-
-		// window.addEventListener("touchstart", function(){
-		// 	console.log("touched");
-		// });
-
 
 		// RUN SET-UP FUNCTIONS
 		//----------------------------
@@ -139,9 +138,8 @@
 			createjs.Ticker.off("tick", ticker);
 			generateKey();
 
-			solveTxt = new createjs.Text("?    ?    ?    ?", "bold "+stageH*0.07+"px Arial", "#333");
-			solveTxt.textAlign="center";
-			stage.addChild(solveTxt);
+			questionMarks();
+
 
 			//add new game button
 			newBtnTxt = new createjs.Text("NEW GAME", "bold "+stageH*0.03+"px Arial", "white");
@@ -152,14 +150,14 @@
 			newGameC.on("mousedown", function(){
 				generateKey();
 				rows.removeAllChildren();
+				feedbackTxt.removeAllChildren();
 				addRows();
 				sizeRows();
+				questionMarks();
 				activeAttempt = 1;
 				stage.update();
 			});
 
-			//TODO generate "answer" row (static until correctly answered)
-			// generate 10 "attempt" rows, each row in a container with number on the left-hand side
 			rows = new createjs.Container();
 			stage.addChild(rows);
 
@@ -297,7 +295,14 @@
 			function win(){
 				//dislay win message in window
 				//add new game btn
+				feedbackTxt.removeAllChildren();
+
+				var winTxt = new createjs.Text("YOU WIN!", "bold "+stageH*0.07+"px Arial", green);
+				winTxt.textAlign="center";
+				feedbackTxt.addChild(winTxt);
+
 				console.log("you win!");
+				stage.update();
 			}
 
 			function lose(){
@@ -317,6 +322,15 @@
 
 		// FUNCTIONS
 		// ----------------------------------------------
+
+		function questionMarks(){
+			solveTxt = new createjs.Text("?    ?    ?    ?", "bold "+stageH*0.07+"px Arial", "#333");
+			solveTxt.textAlign="center";
+			feedbackTxt.addChild(solveTxt);
+		}
+
+
+
 
 		// ANSWER KEY FUNCTION
 		//---------------------------------
@@ -401,8 +415,8 @@
 			newBtnTxt.x = stageW/2 - txtW/2;
 			newBtnTxt.y = stageH - btnH + 15;
 
-			solveTxt.x = stageW/2;
-			solveTxt.y = rowH/2;
+			feedbackTxt.x = stageW/2;
+			feedbackTxt.y = rowH/2;
 		}
 
 
