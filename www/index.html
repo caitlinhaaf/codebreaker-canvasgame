@@ -62,21 +62,6 @@
 		createjs.Touch.enable(stage, true);
 		sizeStage();
 
-		//get and move instructions div.
-		// var instructions = document.getElementById("instructions");
-		// instructions.style.width = stageW + "px";
-		// instructions.style.height = stageH + "px";
-		// instructions.style.cursor = "pointer";
-		// var x = 0;
-		// // var distance = 350;
-		// haaf.swipe(instructions);
-		// instructions.addEventListener("swipe", function(e) {
-		// 		console.log(e.swipeX, e.swipeY);
-		// 		if(e.swipeX != -1) return;
-		// 		x += stageW * e.swipeX;
-		// 		instructions.style.left = x + "px";
-		// });
-
 		var activeAttempt = 1;
 		var numAttempts = 10;
 		var slots = 4;
@@ -126,6 +111,10 @@
 				createjs.Tween.get(instructions).to({x:-stageW}, 700, createjs.Ease.backOut);
 			});
 		}
+
+		// window.addEventListener("touchstart", function(){
+		// 	console.log("touched");
+		// });
 
 
 		// RUN SET-UP FUNCTIONS
