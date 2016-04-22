@@ -38,6 +38,7 @@
 		var stageW;
 		var stageH;
 		var ready = false;
+		var gamePlay = false;
 		var resize;
 		var orientation;
 		var ticker;
@@ -64,6 +65,7 @@
 		var rowW;
 		var margin;
 		var pegW;
+		var pegH;
 
 		var newBtnTxt;
 		var solveTxt;
@@ -89,20 +91,17 @@
 		var newBtn = new createjs.Shape();
 		newGameC.addChild(newBtn);
 
+		var instructions
 		//add instruction box
 		function addInstruct(){
 			//add tutorial/help panes to swipe through (intro and in help button/section)
-			var instructions = new createjs.Container();
+			instructions = new createjs.Container();
 			stage.addChild(instructions);
 			var instructBack = new createjs.Shape();
-			instructBack.graphics.f(dkgreen).drawRect(0,0,stageW,stageH);
 			instructions.addChild(instructBack);
 
 			var instructTxt = new createjs.Text("Press the circles to select a colour sequence and figure out the code", stageH*0.035+"px Arial", "white");
 			instructTxt.textAlign = "center";
-			instructTxt.x = stageW/2;
-			instructTxt.y = stageH*.3;
-			instructTxt.lineWidth = stageW*.8;
 			instructions.addChild(instructTxt);
 
 			//add swipe function
@@ -113,7 +112,21 @@
 
 				ticker = createjs.Ticker.on("tick", stage);
 				createjs.Tween.get(instructions).to({x:-stageW}, 700, createjs.Ease.backOut);
+				gamePlay = true;
 			});
+			sizeInstruct();
+		}
+
+		function sizeInstruct(){
+			if(gamePlay) return;
+			var instructBack = instructions.getChildAt(0);
+			instructBack.graphics.c();
+			instructBack.graphics.f(dkgreen).drawRect(0,0,stageW,stageH);
+
+			var instructTxt = instructions.getChildAt(1);
+			instructTxt.x = stageW/2;
+			instructTxt.y = stageH*.3;
+			instructTxt.lineWidth = stageW*.8;
 		}
 
 		// window.addEventListener("touchstart", function(){
@@ -132,7 +145,7 @@
 			createjs.Ticker.off("tick", ticker);
 			generateKey();
 
-			solveTxt = new createjs.Text("?  ?  ?  ?", "bold "+stageH*0.07+"px Arial", orange);
+			solveTxt = new createjs.Text("?    ?    ?    ?", "bold "+stageH*0.07+"px Arial", "#333");
 			solveTxt.textAlign="center";
 			stage.addChild(solveTxt);
 
@@ -271,9 +284,9 @@
 						row.removeChildAt(4)
 						//replace with rightPeg and halfRightPeg numbers
 						var rightTxt = new createjs.Text(rightPegs, stageH*0.04+"px Arial", green);
-						rightTxt.textAlign="center";
+						// rightTxt.textAlign="center";
 						rightTxt.textBaseline = "middle";
-						rightTxt.x = stageW - stageW*.075;
+						rightTxt.x = stageW - rowH*.8;
 						rightTxt.y = rowH/2;
 						row.addChild(rightTxt);
 
@@ -448,7 +461,8 @@
 			if (row.submit){
 				// console.log("sizing number...");
 				var rightTxt = row.getChildAt(4);
-				rightTxt.x = stageW - stageW*.075;
+				// rightTxt.textAlign = "center";
+				rightTxt.x = stageW - rowH*.8;
 				rightTxt.y = rowH/2;
 				// row.addChild(rightTxt);
 			}else{
@@ -458,7 +472,7 @@
 				// add submit arrow
 				var arrow = row.getChildAt(4);
 				arrow.y = rowH*.2;
-				arrow.x = stageW-(stageW*0.085);
+				arrow.x = stageW-rowH*.7;
 			}
 			//end of row loop
 			}
@@ -486,6 +500,7 @@
 
 		resize = function() {
 			// here is where we put code to resize
+			sizeInstruct();
 			sizeBtns();
 			sizeRows();
 			stage.update();
@@ -495,9 +510,6 @@
 
 	//end of app function
 	}
-
-
-
 	</script>
 
 </body>
