@@ -16,21 +16,6 @@
 			top:0px;
 			background-color:#FFF;
 			z-index: -1;}
-
-		.instructions{
-			/*position: absolute;
-			width: 100vw;
-			height: inherit;*/
-
-			background-color: #a1d63e;
-			z-index: 1;
-			position:absolute;
-			left:0px;
-			top:0px;
-			transition: 0.3;
-			-webkit-transition: all  0.5s ease-out; /* Safari */
-    transition: all 0.5s ease-out;
-		}
 	</style>
 
 	<script src="libraries/createjs-2015.11.26.min.js"></script>
@@ -55,12 +40,17 @@
 		var resize;
 		var orientation;
 		var ticker;
+		var canvas;
 
 		makeCanvas();
 		var stage = new createjs.Stage("myCanvas");
 		// stage.enableMouseOver(10);  // leave out if mobile
 		createjs.Touch.enable(stage, true);
+		// touchInit();
+
 		sizeStage();
+		createjs.Touch.enable(stage, true);
+
 
 		var activeAttempt = 1;
 		var numAttempts = 10;
@@ -100,6 +90,12 @@
 			var instructBack = new createjs.Shape();
 			instructBack.graphics.f(dkgreen).drawRect(0,0,stageW,stageH);
 			instructions.addChild(instructBack);
+
+			var instructTxt = new createjs.Text("Press the circles to select a colour sequence and figure out the code", "bold "+stageH*0.035+"px Arial", "white");
+			instructTxt.x = stageW*0.1;
+			instructTxt.y = stageH*.3;
+			instructTxt.lineWidth = stageW*.8;
+			instructions.addChild(instructTxt);
 
 			//add swipe function
 			haaf.cjsSwipe(instructions);
@@ -324,8 +320,9 @@
 		//---------------------------------
 		function makeCanvas() {
 			// make a canvas tag and apply attributes for id, width and height
-			var canvas = document.createElement("canvas");
+			canvas = document.createElement("canvas");
 			canvas.setAttribute("id", "myCanvas");
+			createjs.Touch.enable(canvas, true);
 
 			// get maximum size for canvas
 			// note: iOS6 does not work from loading icon unless keep canvas within device size
@@ -464,8 +461,22 @@
 			sizeRows();
 			stage.update();
 		}
-		//end of app function
+
+
+		// function touchInit(){
+		// // var el = document.getElementById("canvas")[0];
+		// canvas.addEventListener("touchstart", handleStart, false);
+		// canvas.addEventListener("touchend", handleEnd, false);
+		// canvas.addEventListener("touchcancel", handleCancel, false);
+		// canvas.addEventListener("touchmove", handleMove, false);
+		// log("initialized.");
+		// }
+
+	//end of app function
 	}
+
+
+
 	</script>
 
 	<!-- INSTRUCTIONS BOX -->
