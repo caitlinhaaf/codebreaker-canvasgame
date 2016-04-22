@@ -54,6 +54,7 @@
 		var ready = false;
 		var resize;
 		var orientation;
+		var ticker;
 
 		makeCanvas();
 		var stage = new createjs.Stage("myCanvas");
@@ -88,10 +89,8 @@
 		var margin;
 		var pegW;
 
-		// var rowH = stageH*0.075;
-		// var rowW = stageW*0.95;
-		// var margin = stageH*.025;
-		// var pegW = stageW/6;
+		var newBtnTxt;
+		var rows;
 
 		var colours = ["green", "blue", "orange"];
 		var colourCodes = ["#cdf03c", "#50a89c", "#fd5a37"];
@@ -101,11 +100,6 @@
 		var brown = "#3f3b2f";
 
 		var answerKey = [];
-
-		//add tutorial/help panes to swipe through (intro and in help button/section)
-
-
-		//game set-up
 		var newGameC = new createjs.Container();
 		newGameC.cursor = "pointer";
 		stage.addChild(newGameC);
@@ -113,15 +107,41 @@
 		var newBtn = new createjs.Shape();
 		newGameC.addChild(newBtn);
 
-		var newBtnTxt;
-		var rows;
+		//add instruction box
+		function addInstruct(){
+			//add tutorial/help panes to swipe through (intro and in help button/section)
+			var instructions = new createjs.Container();
+			stage.addChild(instructions);
+			var instructBack = new createjs.Shape();
+			instructBack.graphics.f(dkgreen).drawRect(0,0,stageW,stageH);
+			instructions.addChild(instructBack);
 
+			//add swipe function
+			haaf.cjsSwipe(instructions);
+			instructions.addEventListener("swipe", function(e){
+				console.log(e.swipeX, e.swipeY);
+				if(e.swipeX != -1) return;
+
+				ticker = createjs.Ticker.on("tick", stage);
+				createjs.Tween.get(instructions).to({x:-stageW}, 700, createjs.Ease.backOut);
+			});
+		}
+
+
+		// RUN SET-UP FUNCTIONS
+		//----------------------------
+		// window.addEventListener("mousedown", game);
 		game();
-
+		addInstruct();
 
 		//set up of the game screen.
 		function game(){
+			createjs.Ticker.off("tick", ticker);
 			generateKey();
+
+			//add background
+			// var gameBack = new createjs.Shape();
+
 
 			//add new game button
 			newBtnTxt = new createjs.Text("NEW GAME", "bold "+stageH*0.03+"px Arial", "white");
@@ -286,6 +306,7 @@
 				console.log("you lose");
 			}
 
+		stage.update();
 		//end of game function
 		}
 
@@ -294,8 +315,8 @@
 		stage.update();
 		ready = true;
 
+		// FUNCTIONS
 		// ----------------------------------------------
-
 
 		// ANSWER KEY FUNCTION
 		//---------------------------------
