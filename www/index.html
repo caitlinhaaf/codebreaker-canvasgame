@@ -296,18 +296,18 @@
 				//dislay win message in window
 				//add new game btn
 				feedbackTxt.removeAllChildren();
-
 				var winTxt = new createjs.Text("YOU WIN!", "bold "+stageH*0.07+"px Arial", green);
 				winTxt.textAlign="center";
 				feedbackTxt.addChild(winTxt);
-
-				console.log("you win!");
+				// console.log("you win!");
 				stage.update();
 			}
 
 			function lose(){
-				//dislay win message in window
-				//add new game btn
+				feedbackTxt.removeAllChildren();
+				var loseTxt = new createjs.Text("YOU LOSE!", "bold "+stageH*0.07+"px Arial", orange);
+				loseTxt.textAlign="center";
+				feedbackTxt.addChild(loseTxt);
 				console.log("you lose");
 			}
 
