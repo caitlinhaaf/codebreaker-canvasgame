@@ -19,7 +19,7 @@
           if (obj.getStage == null) return;
           var stage = obj.getStage();
 
-          var swipeDistance = 5;
+          var swipeDistance = 2;
           var swipeTime = 200;
 
           obj.on("mousedown", function(){

@@ -302,7 +302,6 @@
 				// console.log("you win!");
 				stage.update();
 			}
-
 			function lose(){
 				feedbackTxt.removeAllChildren();
 				var loseTxt = new createjs.Text("YOU LOSE!", "bold "+stageH*0.07+"px Arial", orange);
@@ -364,19 +363,6 @@
 			document.body.appendChild(canvas);
 			// stop the canvas from moving when certain keys are pressed (pgdwn, pgup, arrows, home, end)
 			// and stop scrollwheel from moving page
-			canvas.addEventListener("touchstart", function(e)
-			 {
-					 var ctx = canvas.getContext("2d");
-					//  var x = Math.random() * 320;
-					//  var y = Math.random() * 480;
-					//  var w = Math.random() * 100;
-					//  var h = Math.random() * 100;
-					//  ctx.fillStyle = "#FF0000";
-					//  ctx.fillRect(x,y,w,h);
-
-					 // FIX: Cancel the event
-					 e.preventDefault();
-			 }, false);
 			var a = function(e) {
 				if (!e) e = event;
 				if (e.keyCode && (e.keyCode >= 32 && e.keyCode <= 40)) e.preventDefault();
@@ -455,6 +441,7 @@
 				//loop through/resize row pegs
 				for(var j=0; j<slots; j++){
 					var peg = pegCont.getChildAt(j);
+
 					// console.log(peg.colourNum);
 					if (peg.colourNum == undefined){
 						peg.graphics.c();
