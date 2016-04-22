@@ -10,14 +10,23 @@
 
 	<style>
 		body {margin:0px; padding:0px; background-color:#000; overflow:hidden; width: 100%; height: 100%}
-		#myCanvas {position:absolute; left:0px; top:0px; background-color:#FFF; z-index: -1;}
+		#myCanvas {
+			position:absolute;
+			left:0px;
+			top:0px;
+			background-color:#FFF;
+			z-index: -1;}
+
 		.instructions{
-			position: absolute;
+			/*position: absolute;
 			width: 100vw;
-			height: inherit;
+			height: inherit;*/
+
 			background-color: #B2D235;
 			z-index: 1;
-			overflow: hidden;
+			position:absolute;
+			left:0px;
+			top:0px;
 		}
 	</style>
 
@@ -32,24 +41,9 @@
 	event.preventDefault();
 	}, false);
 
-
 	window.addEventListener("load", app);
 
 	function app() {
-		//LOAD IMAGES
-		//------------------------
-		var btn1 = new Image();
-    btn1.src = "assets/greenmarble.png";
-		var gBtn = new createjs.Bitmap(btn1);
-
-		var btn2 = new Image();
-    btn2.src = "assets/bluemarble.png";
-		var bBtn = new createjs.Bitmap(btn2);
-
-		var btn3 = new Image();
-    btn3.src = "assets/yellowmarble.png";
-		var yBtn = new createjs.Bitmap(btn3);
-
 		//GLOBAL VARIABLES
 		//------------------------
 		var stageW;
@@ -63,6 +57,14 @@
 		// stage.enableMouseOver(10);  // leave out if mobile
 		createjs.Touch.enable(stage, true);
 		sizeStage();
+
+		//get and move instructions div.
+		var instructions = document.getElementById("instructions");
+		instructions.style.width = stageW + "px";
+		instructions.style.height = stageH + "px";
+
+
+
 
 		var activeAttempt = 1;
 		var numAttempts = 10;
@@ -430,7 +432,7 @@
 	</script>
 
 	<!-- INSTRUCTIONS BOX -->
-	<!-- <div class="instructions"></div> -->
+	<div class="instructions" id="instructions"></div>
 
 </body>
 </html>
