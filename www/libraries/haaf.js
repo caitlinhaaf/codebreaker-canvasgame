@@ -20,7 +20,7 @@
           var stage = obj.getStage();
 
           var swipeDistance = 5;
-          var swipeTime = 100;
+          var swipeTime = 200;
 
           obj.on("mousedown", function(){
               var startX = stage.mouseX;
